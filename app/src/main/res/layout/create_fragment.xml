@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.CreateFragment">
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_dimen"
+        android:background="@color/transparent"
+        android:contentDescription="@string/def_desc"
+        android:src="@drawable/back_48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/typeMenu"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_small_dimen"
+        android:hint="@string/type"
+        app:layout_constraintEnd_toStartOf="@id/publishButton"
+        app:layout_constraintStart_toEndOf="@id/backButton"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:text="@string/post" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/publishButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:background="@color/transparent"
+        android:contentDescription="@string/def_desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/done_48"
+        tools:ignore="DuplicateSpeakableTextCheck" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/eventSettingsGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:constraint_referenced_ids="eventDate, eventDateText, offlineCheckbox, eventSpeakers,addSpeaker, thirdSpeakerAvatar" />
+
+    <TextView
+        android:id="@+id/eventDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_dimen"
+        android:text="@string/date"
+        android:textColor="@color/purple_small_button"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/typeMenu" />
+
+    <EditText
+        android:id="@+id/eventDateText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:autofillHints="false"
+        android:hint="@string/enter_date"
+        android:inputType="datetime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventDate"
+        tools:ignore="TouchTargetSizeCheck"
+        tools:text="23.12.1999" />
+
+    <CheckBox
+        android:id="@+id/offlineCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:text="@string/offline_event"
+        android:checked="true"
+        app:layout_constraintTop_toBottomOf="@id/eventDateText"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+    <TextView
+        android:id="@+id/eventSpeakers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:layout_marginBottom="@dimen/common_dimen"
+        android:text="@string/speakers"
+        android:textColor="@color/purple_small_button"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/offlineCheckbox" />
+
+    <ImageButton
+        android:id="@+id/addSpeaker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/small_dimen"
+        android:background="@color/transparent"
+        android:contentDescription="@string/def_desc"
+        android:src="@drawable/add_circle_48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventSpeakers" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/thirdSpeakerAvatar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/addSpeaker"
+        app:layout_constraintTop_toBottomOf="@id/eventSpeakers"
+        tools:listitem="@layout/speaker_tag_create" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/eventSettingsButton"
+        style="@style/Widget.AppTheme.EventSettingsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_small_dimen"
+        android:background="@color/transparent"
+        android:checkable="true"
+        android:contentDescription="@string/def_desc"
+        android:visibility="gone"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@id/eventGroupBarrier"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/thirdSpeakerAvatar" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/eventGroupBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="typeMenu, eventSettingsButton, thirdSpeakerAvatar" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/eventGroupBarrier">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="top"
+                android:hint="@string/create_hint"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:padding="@dimen/common_dimen"
+                tools:text="@tools:sample/lorem[30]" />
+
+
+
+            <FrameLayout
+                android:id="@+id/photoPreviewContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/photoPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/def_desc"
+                    android:padding="@dimen/common_dimen"
+                    tools:srcCompat="@drawable/test_image" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/clearPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:contentDescription="@string/def_desc"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/clear_24" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/videoPreviewContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/videoPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+
+                    android:contentDescription="@string/def_desc"
+                    android:padding="@dimen/common_dimen"
+                    tools:srcCompat="@drawable/test_image" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/clearVideo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:contentDescription="@string/def_desc"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/clear_24" />
+
+                <ImageButton
+                    android:id="@+id/playVideo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/transparent"
+                    android:contentDescription="@string/def_desc"
+                    app:srcCompat="@drawable/play_80" />
+            </FrameLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/linkContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/common_dimen"
+                    android:text="@string/link_desc"
+                    android:textColor="@color/purple_small_button"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/linkText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/common_dimen"
+                    android:layout_marginEnd="@dimen/common_dimen"
+                    android:autofillHints="false"
+                    android:hint="@string/add_link"
+                    android:inputType="datetime"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/link"
+                    tools:ignore="TouchTargetSizeCheck"
+                    tools:text="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/audioPreviewContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/audioPreview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:background="@color/transparent"
+                    android:contentDescription="@string/def_desc"
+                    android:padding="@dimen/common_dimen"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@drawable/audio_file_48" />
+
+                <TextView
+                    android:id="@+id/audioTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/common_text_dimen"
+                    app:layout_constraintBottom_toBottomOf="@id/audioPreview"
+                    app:layout_constraintEnd_toStartOf="@id/clearAudio"
+                    app:layout_constraintStart_toEndOf="@id/audioPreview"
+                    app:layout_constraintTop_toTopOf="@id/audioPreview"
+                    tools:text="test_audio_name.mp3" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/clearAudio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="@dimen/common_dimen"
+                    android:background="@color/transparent"
+                    android:contentDescription="@string/def_desc"
+                    app:fabSize="mini"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/audioTitle"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/clear_48" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/attachmentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_dimen"
+        android:background="@color/white"
+        android:contentDescription="@string/def_desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/attach_file_24" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/attachmentButtonsGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="addAudio, addPhoto, addVideo"
+        tools:visibility="visible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_dimen"
+        android:background="@color/white"
+        android:contentDescription="@string/def_desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/attachmentButton"
+        app:srcCompat="@drawable/photo_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_dimen"
+        android:background="@color/white"
+        android:contentDescription="@string/def_desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/addPhoto"
+        app:srcCompat="@drawable/video_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addAudio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_dimen"
+        android:background="@color/white"
+        android:contentDescription="@string/def_desc"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/addVideo"
+        app:srcCompat="@drawable/audio_24" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

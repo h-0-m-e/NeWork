@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_dimen"
+        android:background="@color/transparent"
+        android:contentDescription="@string/def_desc"
+        android:src="@drawable/back_48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_dimen"
+        android:visibility="gone"
+        android:background="@color/transparent"
+        android:contentDescription="@string/def_desc"
+        android:src="@drawable/trashbox_48"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium_dimen"
+        android:text="@string/position"
+        android:textColor="@color/purple_small_button"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/positionField"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/positionField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/medium_dimen"
+        android:layout_marginTop="@dimen/big_dimen"
+        android:layout_marginBottom="@dimen/medium_dimen"
+        android:hint="@string/position_hint"
+        android:importantForAutofill="no"
+        android:inputType="textLongMessage"
+        android:padding="@dimen/common_small_dimen"
+        android:textSize="@dimen/common_medium_text_dimen"
+        app:layout_constraintBottom_toTopOf="@id/companyField"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/company"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium_dimen"
+        android:text="@string/company"
+        android:textColor="@color/purple_small_button"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/companyField"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/companyField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/medium_dimen"
+        android:layout_marginBottom="@dimen/medium_dimen"
+        android:hint="@string/company_hint"
+        android:importantForAutofill="no"
+        android:inputType="textLongMessage"
+        android:padding="@dimen/common_small_dimen"
+        android:textSize="@dimen/common_medium_text_dimen"
+        app:layout_constraintBottom_toTopOf="@id/linkField"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/positionField" />
+
+    <TextView
+        android:id="@+id/link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium_dimen"
+        android:text="@string/link_desc"
+        android:textColor="@color/purple_small_button"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/linkField"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/linkField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/medium_dimen"
+        android:layout_marginBottom="@dimen/medium_dimen"
+        android:hint="@string/company_link_hint"
+        android:importantForAutofill="no"
+        android:inputType="textLongMessage"
+        android:padding="@dimen/common_small_dimen"
+        android:textSize="@dimen/common_medium_text_dimen"
+        app:layout_constraintBottom_toTopOf="@id/employmentDateField"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/companyField" />
+
+    <TextView
+        android:id="@+id/employmentDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium_dimen"
+        android:text="@string/employment_date"
+        android:textColor="@color/purple_small_button"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/employmentDateField"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/employmentDateField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/medium_dimen"
+        android:layout_marginBottom="@dimen/medium_dimen"
+        android:hint="@string/employment_date_hint"
+        android:importantForAutofill="no"
+        android:inputType="date"
+        android:padding="@dimen/common_small_dimen"
+        android:textSize="@dimen/common_medium_text_dimen"
+        app:layout_constraintBottom_toTopOf="@id/dismissalDateField"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linkField" />
+
+    <TextView
+        android:id="@+id/dismissalDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/medium_dimen"
+        android:text="@string/dismissal_date"
+        android:textColor="@color/purple_small_button"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/dismissalDateField"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <EditText
+        android:id="@+id/dismissalDateField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/medium_dimen"
+        android:layout_marginBottom="@dimen/medium_dimen"
+        android:hint="@string/dismissal_date_hint"
+        android:importantForAutofill="no"
+        android:inputType="date"
+        android:padding="@dimen/common_small_dimen"
+        android:textSize="@dimen/common_medium_text_dimen"
+        app:layout_constraintBottom_toTopOf="@id/saveButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/employmentDateField" />
+
+    <CheckBox
+        android:id="@+id/stillWorkCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/i_still_work_here"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="@id/dismissalDateField"
+
+        app:layout_constraintTop_toBottomOf="@id/dismissalDateField" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveButton"
+        android:layout_width="@dimen/ultra_big_dimen"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/extra_big_dimen"
+        android:backgroundTint="@color/purple_500"
+        android:text="@string/save"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dismissalDateField" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

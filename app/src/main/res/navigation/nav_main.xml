@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/startFragment">
+
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="ru.netology.nework.ui.StartFragment"
+        android:label="AuthFragment" >
+        <action
+            android:id="@+id/action_startFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="ru.netology.nework.ui.SignUpFragment"
+        android:label="SignUpFragment" >
+        <action
+            android:id="@+id/action_signUpFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_signUpFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="ru.netology.nework.ui.SignInFragment"
+        android:label="SignInFragment" >
+        <action
+            android:id="@+id/action_signInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="ru.netology.nework.ui.FeedFragment"
+        android:label="FeedFragment" >
+        <action
+            android:id="@+id/action_feedFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_createFragment"
+            app:destination="@id/createFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_myWallFragment"
+            app:destination="@id/myWallFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_eventFragment"
+            app:destination="@id/eventFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_wallFragment"
+            app:destination="@id/wallFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_videoFragment"
+            app:destination="@id/videoFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_photoFragment"
+            app:destination="@id/photoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="ru.netology.nework.ui.NotificationsFragment"
+        android:label="NotificationsFragment" >
+        <action
+            android:id="@+id/action_notificationsFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
+        <action
+            android:id="@+id/action_notificationsFragment_to_createFragment"
+            app:destination="@id/createFragment" />
+        <action
+            android:id="@+id/action_notificationsFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+        <action
+            android:id="@+id/action_notificationsFragment_to_createFragment2"
+            app:destination="@id/createFragment" />
+        <action
+            android:id="@+id/action_notificationsFragment_to_wallFragment"
+            app:destination="@id/wallFragment" />
+        <action
+            android:id="@+id/action_notificationsFragment_to_myWallFragment"
+            app:destination="@id/myWallFragment" />
+        <action
+            android:id="@+id/action_notificationsFragment_to_eventFragment"
+            app:destination="@id/eventFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createFragment"
+        android:name="ru.netology.nework.ui.CreateFragment"
+        android:label="CreateFragment" />
+    <fragment
+        android:id="@+id/jobFragment"
+        android:name="ru.netology.nework.ui.JobFragment"
+        android:label="JobFragment" >
+        <action
+            android:id="@+id/action_jobFragment_to_myWallFragment"
+            app:destination="@id/myWallFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="ru.netology.nework.ui.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_authFragment"
+            app:destination="@id/startFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_myWallFragment"
+            app:destination="@id/myWallFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postFragment"
+        android:name="ru.netology.nework.ui.PostFragment"
+        android:label="PostFragment" >
+        <action
+            android:id="@+id/action_postFragment_to_wallFragment"
+            app:destination="@id/wallFragment" />
+        <action
+            android:id="@+id/action_postFragment_to_videoFragment"
+            app:destination="@id/videoFragment" />
+        <action
+            android:id="@+id/action_postFragment_to_photoFragment"
+            app:destination="@id/photoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="ru.netology.nework.ui.EventFragment"
+        android:label="EventFragment" >
+        <action
+            android:id="@+id/action_eventFragment_to_wallFragment"
+            app:destination="@id/wallFragment" />
+        <action
+            android:id="@+id/action_eventFragment_to_photoFragment"
+            app:destination="@id/photoFragment" />
+        <action
+            android:id="@+id/action_eventFragment_to_videoFragment"
+            app:destination="@id/videoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myWallFragment"
+        android:name="ru.netology.nework.ui.MyWallFragment"
+        android:label="MyWallFragment" >
+        <action
+            android:id="@+id/action_myWallFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
+        <action
+            android:id="@+id/action_myWallFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
+        <action
+            android:id="@+id/action_myWallFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_myWallFragment_to_jobFragment"
+            app:destination="@id/jobFragment" />
+        <action
+            android:id="@+id/action_myWallFragment_to_eventFragment"
+            app:destination="@id/eventFragment" />
+        <action
+            android:id="@+id/action_myWallFragment_to_createFragment"
+            app:destination="@id/createFragment" />
+        <action
+            android:id="@+id/action_myWallFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+        <action
+            android:id="@+id/action_myWallFragment_to_wallFragment"
+            app:destination="@id/wallFragment" />
+        <action
+            android:id="@+id/action_myWallFragment_to_photoFragment"
+            app:destination="@id/photoFragment" />
+        <action
+            android:id="@+id/action_myWallFragment_to_videoFragment"
+            app:destination="@id/videoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/wallFragment"
+        android:name="ru.netology.nework.ui.WallFragment"
+        android:label="WallFragment" >
+        <action
+            android:id="@+id/action_wallFragment_to_photoFragment"
+            app:destination="@id/photoFragment" />
+        <action
+            android:id="@+id/action_wallFragment_to_videoFragment"
+            app:destination="@id/videoFragment" />
+        <action
+            android:id="@+id/action_wallFragment_to_feedFragment"
+            app:destination="@id/feedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/photoFragment"
+        android:name="ru.netology.nework.ui.PhotoFragment"
+        android:label="PhotoFragment" />
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="ru.netology.nework.ui.VideoFragment"
+        android:label="VideoFragment" />
+</navigation>

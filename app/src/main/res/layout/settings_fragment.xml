@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_dimen"
+        android:contentDescription="@string/def_desc"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/back_48"
+        android:background="@color/transparent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/switchThemeText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/backButton"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:layout_marginStart="@dimen/pre_medium_dimen"
+        app:layout_constraintEnd_toStartOf="@id/switchTheme"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:text="@string/dark_mode" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switchTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/common_dimen"
+        app:layout_constraintTop_toBottomOf="@id/backButton"
+        app:layout_constraintStart_toEndOf="@id/switchThemeText"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

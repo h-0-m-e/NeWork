@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/feed"
+        android:icon="@drawable/home_48"
+        android:title="@string/feed"/>
+
+    <item android:id="@+id/profile"
+        android:icon="@drawable/profile_48"
+        android:title="@string/profile" />
+    <item
+        android:id="@+id/notifications"
+        android:icon="@drawable/notifications_48"
+        android:title="@string/notifications" />
+    <item
+        android:id="@+id/create"
+        android:icon="@drawable/add_48"
+        android:title="@string/create" />
+</menu>

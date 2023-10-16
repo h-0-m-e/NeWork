@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ui.StartFragment">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:contentDescription="@string/def_desc"
+        android:layout_marginBottom="@dimen/big_dimen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/signInButton"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:src="@drawable/logo"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/signInButton"
+        android:layout_width="@dimen/ultra_big_dimen"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/big_dimen"
+        android:text="@string/sign_in"
+        android:layout_marginHorizontal="64dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/purple_500"
+        style="@style/TopButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo"
+        app:layout_constraintBottom_toTopOf="@id/signUpButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/signUpButton"
+        android:layout_width="@dimen/ultra_big_dimen"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/big_dimen"
+        android:text="@string/sign_up"
+        style="@style/BottomButton"
+        android:backgroundTint="@color/purple_500"
+        android:layout_marginHorizontal="64dp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/signInButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

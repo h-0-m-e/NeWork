@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/publisherAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:layout_marginBottom="@dimen/common_dimen"
+        android:contentDescription="@string/def_desc"
+        app:layout_constraintBottom_toTopOf="@id/nameBarrier"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@drawable/publication_avatar_48" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/nameBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="publisherAvatar" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/menu"
+        style="@style/Widget.AppTheme.MenuButton"
+        android:layout_width="@dimen/big_dimen"
+        android:layout_height="@dimen/big_dimen"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:layout_marginBottom="@dimen/common_dimen"
+        android:background="@color/transparent"
+        android:contentDescription="@string/menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/nickname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:ellipsize="end"
+        android:lines="1"
+        app:layout_constraintBottom_toTopOf="@id/published"
+        app:layout_constraintEnd_toStartOf="@+id/menu"
+        app:layout_constraintStart_toEndOf="@+id/publisherAvatar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Тестовый никнейм. Тестовый никнейм. Тестовый никнейм. " />
+
+    <TextView
+        android:id="@+id/published"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/small_dimen"
+        android:layout_marginBottom="@dimen/common_dimen"
+        app:layout_constraintBottom_toTopOf="@id/nameBarrier"
+        app:layout_constraintEnd_toEndOf="@id/nickname"
+        app:layout_constraintStart_toEndOf="@+id/publisherAvatar"
+        app:layout_constraintTop_toBottomOf="@+id/nickname"
+        tools:text="Тестовая дата" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/eventType"
+        android:checkable="true"
+        style="@style/EventTypeMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:fontFamily="sans-serif-medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameBarrier" />
+
+    <TextView
+        android:id="@+id/eventText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:layout_marginBottom="@dimen/common_dimen"
+        app:layout_constraintBottom_toTopOf="@id/link"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventType"
+        tools:text="Тестовый текстТестовый текстТестовый текстТестовый текстТестовый текстТестовый текстТестовый текстТестовый текстТестовый текстТестовый текстТестовый текстТестовый текстТестовый текстТестовый текстТестовый текстТестовый текстТест" />
+
+    <TextView
+        android:id="@+id/link"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:layout_marginBottom="@dimen/common_dimen"
+
+        android:textColor="@color/link_def_color"
+        app:layout_constraintBottom_toTopOf="@id/eventDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventText"
+        tools:text="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/dateGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="eventDate, eventDateText" />
+
+    <TextView
+        android:id="@+id/eventDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:layout_marginBottom="@dimen/common_dimen"
+        android:text="@string/date"
+        android:textColor="@color/purple_small_button"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/eventSpeakers"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/link" />
+
+    <TextView
+        android:id="@+id/eventDateText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_small_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/eventDate"
+        app:layout_constraintTop_toTopOf="@id/eventDate"
+        tools:text="23.12.1999" />
+
+    <TextView
+        android:id="@+id/eventSpeakers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:layout_marginBottom="@dimen/common_dimen"
+        android:text="@string/speakers"
+        android:textColor="@color/purple_small_button"
+        android:textStyle="bold"
+        tools:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/eventDateText" />
+
+    <ImageButton
+        android:id="@+id/thirdSpeakerAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/common_dimen"
+        android:layout_marginStart="@dimen/common_medium_dimen"
+        android:background="@color/transparent"
+        android:contentDescription="@string/def_desc"
+        tools:visibility="gone"
+        android:src="@drawable/publication_avatar_48"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="@id/secondSpeakerAvatar"
+        app:layout_constraintStart_toStartOf="@id/secondSpeakerAvatar"
+        app:layout_constraintTop_toTopOf="@id/secondSpeakerAvatar" />
+
+    <ImageButton
+        android:id="@+id/secondSpeakerBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/pre_common_dimen"
+        android:layout_marginStart="@dimen/common_medium_dimen"
+        android:background="@color/transparent"
+        android:contentDescription="@string/def_desc"
+        android:src="@drawable/circle_54"
+        tools:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintStart_toStartOf="@id/firstSpeakerAvatar"
+        app:layout_constraintTop_toBottomOf="@id/eventSpeakers" />
+
+    <ImageButton
+        android:id="@+id/secondSpeakerAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/common_dimen"
+        android:layout_marginStart="@dimen/common_medium_dimen"
+        android:background="@color/transparent"
+        android:contentDescription="@string/def_desc"
+        tools:visibility="gone"
+        android:src="@drawable/publication_avatar_48"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/attachmentBarrier"
+        app:layout_constraintStart_toStartOf="@id/firstSpeakerAvatar"
+        app:layout_constraintTop_toBottomOf="@id/eventSpeakers" />
+
+    <ImageButton
+        android:id="@+id/firstSpeakerBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/pre_common_dimen"
+        android:background="@color/transparent"
+        android:contentDescription="@string/def_desc"
+        android:src="@drawable/circle_54"
+        tools:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintStart_toStartOf="@id/eventSpeakers"
+        app:layout_constraintTop_toBottomOf="@id/eventSpeakers" />
+
+    <ImageButton
+        android:id="@+id/firstSpeakerAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:background="@color/transparent"
+        android:contentDescription="@string/def_desc"
+        tools:visibility="gone"
+        android:src="@drawable/publication_avatar_48"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintStart_toStartOf="@id/eventSpeakers"
+        app:layout_constraintTop_toBottomOf="@id/eventSpeakers" />
+
+    <TextView
+        android:id="@+id/speakersMore"
+        android:layout_width="0dp"
+        tools:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/extra_small_dimen"
+        app:layout_constraintBottom_toBottomOf="@id/speakersMoreText"
+        app:layout_constraintStart_toEndOf="@id/speakersMoreText"
+        app:layout_constraintTop_toTopOf="@id/speakersMoreText"
+        tools:text="23" />
+
+    <TextView
+        android:id="@+id/speakersMoreText"
+        android:layout_width="0dp"
+        android:text="@string/and"
+        tools:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        app:layout_constraintBottom_toBottomOf="@id/thirdSpeakerAvatar"
+        app:layout_constraintStart_toEndOf="@id/thirdSpeakerAvatar"
+        app:layout_constraintTop_toTopOf="@id/thirdSpeakerAvatar"
+        tools:text="And" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/attachmentBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids=" eventDateText,firstSpeakerBackground" />
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/common_medium_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/def_desc"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/attachmentBarrier"
+        tools:srcCompat="@drawable/test_image" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/videoGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="videoPreview, playVideo" />
+
+    <ImageView
+        android:id="@+id/videoPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:contentDescription="@string/def_desc"
+        app:layout_constraintTop_toBottomOf="@id/photo"
+        app:srcCompat="@drawable/youtube" />
+
+
+    <ImageView
+        android:id="@+id/playVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/def_desc"
+        app:layout_constraintBottom_toBottomOf="@id/videoPreview"
+        app:layout_constraintEnd_toEndOf="@id/videoPreview"
+        app:layout_constraintStart_toStartOf="@id/videoPreview"
+        app:layout_constraintTop_toTopOf="@id/videoPreview"
+        app:srcCompat="@drawable/play_80" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/audioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="playAudioButton, audioTitle" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/playAudioButton"
+        style="@style/Widget.AppTheme.PlayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:backgroundTint="@color/transparent"
+        android:checkable="true"
+        android:contentDescription="@string/def_desc"
+        app:layout_constraintEnd_toStartOf="@id/audioTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/videoPreview" />
+
+    <TextView
+        android:id="@+id/audioTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:text="@string/audio"
+        android:textSize="@dimen/common_medium_text_dimen"
+        app:layout_constraintBottom_toBottomOf="@id/playAudioButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/playAudioButton"
+        app:layout_constraintTop_toTopOf="@id/playAudioButton" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/TextBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="eventText,photo,videoPreview, playAudioButton,attachmentBarrier" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/like"
+        style="@style/Widget.AppTheme.LikeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:checkable="true"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/TextBarrier"
+        tools:ignore="TouchTargetSizeCheck"
+        tools:text="23345" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

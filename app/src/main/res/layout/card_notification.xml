@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/publicationAvatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:layout_marginBottom="@dimen/common_dimen"
+        android:contentDescription="@string/def_desc"
+        app:layout_constraintBottom_toTopOf="@id/nameBarrier"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@drawable/publication_avatar_48" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/nameBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="publicationAvatar" />
+
+    <TextView
+        android:id="@+id/nickname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:ellipsize="end"
+        android:lines="1"
+        app:layout_constraintBottom_toTopOf="@id/markDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/publicationAvatar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Тестовый никнейм. Тестовый никнейм. Тестовый никнейм. " />
+
+    <TextView
+        android:id="@+id/markDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/small_dimen"
+        android:layout_marginBottom="@dimen/common_dimen"
+        app:layout_constraintBottom_toTopOf="@id/nameBarrier"
+        app:layout_constraintEnd_toEndOf="@id/nickname"
+        app:layout_constraintStart_toEndOf="@+id/publicationAvatar"
+        app:layout_constraintTop_toBottomOf="@+id/nickname"
+        tools:text="Тестовая дата" />
+
+    <TextView
+        android:id="@+id/markText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        android:layout_marginTop="@dimen/common_dimen"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:layout_marginBottom="@dimen/common_dimen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameBarrier"
+        android:text="@string/notification_msg" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/signInButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="SHOW"
+        android:layout_marginEnd="@dimen/common_dimen"
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/extra_small_dimen"
+        app:layout_constraintTop_toBottomOf="@id/nameBarrier"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/purple_500"/>
+
+    
+
+</androidx.constraintlayout.widget.ConstraintLayout>

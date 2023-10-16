@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TopButton" parent="Widget.MaterialComponents.Button">
+        <item name="shapeAppearanceOverlay">@style/TopShapeAppearance</item>
+    </style>
+
+    <style name="TopShapeAppearance">
+        <item name="cornerSizeTopRight">32dp</item>
+        <item name="cornerSizeBottomRight">4dp</item>
+        <item name="cornerSizeTopLeft">32dp</item>
+        <item name="cornerSizeBottomLeft">4dp</item>
+    </style>
+
+    <style name="BottomButton" parent="Widget.MaterialComponents.Button">
+        <item name="shapeAppearanceOverlay">@style/BottomShapeAppearance</item>
+    </style>
+
+    <style name="BottomShapeAppearance">
+        <item name="cornerSizeTopRight">4dp</item>
+        <item name="cornerSizeBottomRight">32dp</item>
+        <item name="cornerSizeTopLeft">4dp</item>
+        <item name="cornerSizeBottomLeft">32dp</item>
+    </style>
+
+    <style name="Widget.AppTheme.LikeButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="icon">@drawable/like</item>
+        <item name="iconTint">@color/color_like</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="Widget.AppTheme.ShareButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="icon">@drawable/share_24</item>
+        <item name="iconTint">@color/color_share</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="Widget.AppTheme.MenuButton" parent="Widget.MaterialComponents.Button.Icon">
+        <item name="icon">@drawable/menu_24</item>
+        <item name="iconTint">@color/black</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="Widget.AppTheme.PlayButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="icon">@drawable/play_pause_button</item>
+        <item name="iconTint">@color/purple_small_button</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="Widget.AppTheme.EventSettingsButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="iconTint">@color/black</item>
+        <item name="srcCompat">@drawable/ic_event_settings_button</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="ListSwitcherButton" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+    </style>
+
+    <style name="EventTypeMarker" parent="Widget.MaterialComponents.Button">
+        <item name="android:text">@string/online_event</item>
+        <item name="android:textColor">@color/color_event_type</item>
+        <item name="iconTint">@color/color_event_type</item>
+        <item name="icon">@drawable/event_type_icon</item>
+    </style>
+
+</resources>

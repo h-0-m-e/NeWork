@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="extra_ultra_big_dimen">250dp</dimen>
+    <dimen name="ultra_big_dimen">200dp</dimen>
+    <dimen name="extra_big_dimen">60dp</dimen>
+    <dimen name="big_dimen">48dp</dimen>
+    <dimen name="medium_dimen">32dp</dimen>
+    <dimen name="common_medium_dimen">24dp</dimen>
+    <dimen name="common_medium_text_dimen">24sp</dimen>
+    <dimen name="pre_medium_dimen">20dp</dimen>
+    <dimen name="common_dimen">16dp</dimen>
+    <dimen name="common_text_dimen">16sp</dimen>
+    <dimen name="pre_common_dimen">14dp</dimen>
+    <dimen name="small_dimen">10dp</dimen>
+    <dimen name="common_small_dimen">8dp</dimen>
+    <dimen name="extra_small_dimen">4dp</dimen>
+</resources>
