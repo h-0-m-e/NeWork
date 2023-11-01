@@ -45,7 +45,6 @@ class WallFragment: Fragment() {
         val swipeRefresh = binding.swipeRefresh
 
         val userId = requireArguments().textArg!!.toLong()
-        wallViewModel.clear()
         wallViewModel.setUser(userId)
         wallViewModel.loadUser()
         wallViewModel.loadJob()
@@ -56,8 +55,9 @@ class WallFragment: Fragment() {
         }
 
         swipeRefresh.setOnRefreshListener{
+            binding.swipeRefresh.isRefreshing = false
             postViewModel.refresh()
-            wallViewModel.refreshGeneral()
+            wallViewModel.refreshGeneral(userId)
         }
 
         wallViewModel.user.observe(viewLifecycleOwner){user ->

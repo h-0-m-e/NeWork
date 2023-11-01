@@ -17,7 +17,6 @@ import ru.netology.nework.adapter.PostAdapter
 import ru.netology.nework.databinding.MyWallFragmentBinding
 import ru.netology.nework.extentions.loadWallAvatar
 import ru.netology.nework.listener.PostOnInteractionListener
-import ru.netology.nework.utils.StringArg
 import ru.netology.nework.viewmodel.AuthViewModel
 import ru.netology.nework.viewmodel.PostViewModel
 import ru.netology.nework.viewmodel.WallViewModel
@@ -45,7 +44,6 @@ class MyWallFragment: Fragment() {
         val swipeRefresh = binding.swipeRefresh
 
         val userId = authViewModel.data.value!!.id
-        wallViewModel.clear()
         wallViewModel.setUser(userId)
         wallViewModel.loadUser()
         wallViewModel.loadJob()
@@ -56,8 +54,9 @@ class MyWallFragment: Fragment() {
         }
 
         swipeRefresh.setOnRefreshListener{
+            binding.swipeRefresh.isRefreshing = false
             postViewModel.refresh()
-            wallViewModel.refreshGeneral()
+            wallViewModel.refreshGeneral(userId)
         }
 
 
@@ -94,13 +93,6 @@ class MyWallFragment: Fragment() {
                 this.startActivity(linkIntent)
             }
 
-            binding.jobEditButton.setOnClickListener {
-                findNavController().navigate(R.id.action_myWallFragment_to_jobFragment,
-                    Bundle().apply {
-                        textArg = job?.id.toString()
-                    })
-            }
-
         }
 
         val postInteractionListener = PostOnInteractionListener(
@@ -123,15 +115,20 @@ class MyWallFragment: Fragment() {
             )
         )
 
+        binding.jobEditButton.setOnClickListener {
+            findNavController().navigate(R.id.action_myWallFragment_to_jobFragment)
+        }
+
+        binding.addJobButton.setOnClickListener {
+            findNavController().navigate(R.id.action_myWallFragment_to_jobFragment)
+        }
 
         binding.settingsButton.setOnClickListener {
             findNavController().navigate(R.id.action_myWallFragment_to_settingsFragment)
         }
 
+
         return binding.root
     }
 
-    companion object {
-        var Bundle.textArg: String? by StringArg
-    }
 }

@@ -125,8 +125,6 @@ class EventViewHolder(
                 }
             }
 
-
-
             photo.isVisible = (event.attachment?.type == AttachmentType.IMAGE) &&
                     (event.attachment.url.isNotBlank())
             videoGroup.isVisible = (event.attachment?.type == AttachmentType.VIDEO) &&

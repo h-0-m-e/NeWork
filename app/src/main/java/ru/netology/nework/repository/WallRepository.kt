@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.map
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import ru.netology.nework.api.AppApi
+import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.dao.AppDao
 import ru.netology.nework.dto.Attachment
 import ru.netology.nework.dto.Job
@@ -74,13 +75,23 @@ class WallRepository(
     }
 
     suspend fun getJob(): Job {
-        val response = AppApi.service.jobGet(userId.value!!)
-        if (!response.isSuccessful) {
-            throw RuntimeException(response.message())
+        if(userId.value == AppAuth.getInstance().data.value?.id){
+            val response = AppApi.service.myJobGet()
+            if (!response.isSuccessful) {
+                throw RuntimeException(response.message())
+            }
+            val body = response.body() ?: throw RuntimeException("body is null")
+            appDao.jobInsert(body.toEntity(body, AppAuth.getInstance().data.value!!.id))
+            return body
+        } else {
+            val response = AppApi.service.jobGet(userId.value!!)
+            if (!response.isSuccessful) {
+                throw RuntimeException(response.message())
+            }
+            val body = response.body() ?: throw RuntimeException("body is null")
+            appDao.jobInsert(body.toEntity(body, userId.value!!))
+            return body
         }
-        val body = response.body() ?: throw RuntimeException("body is null")
-        appDao.jobInsert(body.toEntity(body, userId.value!!))
-        return body
     }
 
     suspend fun saveJob(job: Job) {
@@ -89,7 +100,15 @@ class WallRepository(
             throw RuntimeException(response.message())
         }
         val body = response.body() ?: throw RuntimeException("body is null")
-        appDao.jobInsert(body.toEntity(body, userId.value!!))
+        appDao.jobInsert(body.toEntity(body, AppAuth.getInstance().data.value!!.id))
+    }
+
+    suspend fun deleteJob(jobId: String) {
+        appDao.jobDelete(jobId.toInt())
+        val response = AppApi.service.deleteJob(jobId)
+        if (!response.isSuccessful) {
+            throw RuntimeException(response.message())
+        }
     }
 
     suspend fun likeById(id: Long) {

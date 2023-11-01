@@ -70,6 +70,9 @@ interface AppApiService {
     @GET("{user_id}/jobs/")
     suspend fun jobGet(@Path("user_id") userId: Long): Response<Job>
 
+    @GET("my/jobs/")
+    suspend fun myJobGet(): Response<Job>
+
     @GET("{author_id}/wall/")
     suspend fun wallGet(@Path("author_id") authorId: Long): Response<List<Post>>
 
@@ -84,6 +87,9 @@ interface AppApiService {
 
     @POST("my/jobs/")
     suspend fun saveJob(@Body job: Job): Response<Job>
+
+    @DELETE("my/jobs/{job_id}/")
+    suspend fun deleteJob(jobId: String): Response<Unit>
 
     @POST("events/")
     suspend fun eventSave(@Body event: Event): Response<Event>

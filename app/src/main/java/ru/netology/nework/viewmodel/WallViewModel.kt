@@ -86,9 +86,25 @@ class WallViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 
-    fun refreshGeneral() {
-        clear()
-        setUser(userId.value!!)
+    fun saveJob(job: Job) = viewModelScope.launch {
+        try {
+            repository.saveJob(job)
+        } catch (e: Exception) {
+            print(e)
+        }
+    }
+
+    fun deleteJob() = viewModelScope.launch {
+        try {
+            repository.deleteJob(job.value?.id.toString())
+        } catch (e: Exception) {
+            print(e)
+        }
+        job.value = null
+    }
+
+    fun refreshGeneral(userId: Long) {
+        setUser(userId)
         loadUser()
         loadJob()
         loadPosts()
@@ -103,9 +119,4 @@ class WallViewModel(private val application: Application) : AndroidViewModel(app
         )
     }
 
-    fun clear(){
-        user.value = emptyUser
-        job.value = null
-        userId.value = 0L
-    }
 }

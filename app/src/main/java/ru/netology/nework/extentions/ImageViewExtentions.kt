@@ -19,6 +19,7 @@ fun ImageView.loadCircle(url: String) {
 fun ImageView.loadCircleFromLocalStorage(uri: Uri) {
     Glide.with(this)
         .load(uri)
+        .circleCrop()
         .placeholder(R.drawable.loading_48)
         .error(R.drawable.loading_error_48)
         .timeout(5_000)
@@ -37,6 +38,7 @@ fun ImageView.load(url: String) {
 fun ImageView.loadWallAvatar(url: String) {
     Glide.with(this)
         .load(url)
+        .circleCrop()
         .placeholder(R.drawable.loading_128)
         .error(R.drawable.loading_error_128)
         .timeout(10_000)

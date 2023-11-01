@@ -1,6 +1,7 @@
 package ru.netology.nework.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -44,6 +45,9 @@ interface AppDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun jobInsert(job: JobEntity)
+
+    @Query("DELETE FROM JobEntity WHERE id = :jobId")
+    suspend fun jobDelete(jobId: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun postInsert(posts: List<PostEntity>)
