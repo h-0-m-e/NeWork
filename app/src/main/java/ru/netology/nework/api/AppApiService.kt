@@ -61,20 +61,20 @@ interface AppApiService {
     @GET("events/")
     suspend fun eventGetAll(): Response<List<Event>>
 
-    @GET("users/")
-    suspend fun userGetAll(): Response<List<User>>
-
     @GET("users/{id}/")
     suspend fun userGet(@Path("id") id: Long): Response<User>
 
     @GET("{user_id}/jobs/")
-    suspend fun jobGet(@Path("user_id") userId: Long): Response<Job>
+    suspend fun jobGet(@Path("user_id") userId: Long): Response<List<Job>>
 
     @GET("my/jobs/")
-    suspend fun myJobGet(): Response<Job>
+    suspend fun myJobGet(): Response<List<Job>>
 
     @GET("{author_id}/wall/")
     suspend fun wallGet(@Path("author_id") authorId: Long): Response<List<Post>>
+
+    @GET("my/wall/")
+    suspend fun myWallGet(): Response<List<Post>>
 
     @GET("posts/{id}/after/")
     suspend fun postGetNewer(@Path("id") id: Long): Response<List<Post>>
@@ -89,7 +89,7 @@ interface AppApiService {
     suspend fun saveJob(@Body job: Job): Response<Job>
 
     @DELETE("my/jobs/{job_id}/")
-    suspend fun deleteJob(jobId: String): Response<Unit>
+    suspend fun deleteJob(@Path("job_id") job_id: String): Response<Unit>
 
     @POST("events/")
     suspend fun eventSave(@Body event: Event): Response<Event>

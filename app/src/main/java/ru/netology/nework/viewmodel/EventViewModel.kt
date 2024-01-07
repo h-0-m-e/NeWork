@@ -94,6 +94,9 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     val lastEvent: LiveData<Event>
         get() = _lastEvent
 
+    //This parameter is shows which list is on(Events or Posts)
+    val isPostsShowed = MutableLiveData(true)
+
     init {
         loadEvents()
     }

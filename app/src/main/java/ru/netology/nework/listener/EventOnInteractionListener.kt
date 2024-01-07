@@ -37,10 +37,10 @@ open class EventOnInteractionListener(
     }
 
     open fun onOpenVideo(event: Event){
-        findNavController(view).navigate(R.id.videoFragment,
-            Bundle().apply {
-                textArg = event.attachment!!.url
-            })
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(event.attachment?.url))
+        val videoIntent =
+            Intent.createChooser(intent, context.getString(R.string.link_intent))
+        context.startActivity(videoIntent)
     }
 
     open fun onOpenEvent(event: Event){

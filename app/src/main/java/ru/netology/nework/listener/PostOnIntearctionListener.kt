@@ -38,14 +38,14 @@ open class PostOnInteractionListener(
     }
 
     open fun onOpenVideo(post: Post){
-        Navigation.findNavController(view).navigate(R.id.videoFragment,
-            Bundle().apply {
-                textArg = post.attachment!!.url
-            })
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(post.attachment?.url))
+        val videoIntent =
+            Intent.createChooser(intent, context.getString(R.string.link_intent))
+        context.startActivity(videoIntent)
     }
 
     open fun onOpenPost(post: Post){
-        Navigation.findNavController(view).navigate(R.id.eventFragment,
+        Navigation.findNavController(view).navigate(R.id.postFragment,
             Bundle().apply {
                 textArg = post.id.toString()
             })
@@ -64,6 +64,7 @@ open class PostOnInteractionListener(
 
     open fun onRemove(post: Post) {
         viewModel.removeById(post.id.toLong())
+        Navigation.findNavController(view).popBackStack()
     }
 
     open fun onEdit(post: Post) {

@@ -21,15 +21,11 @@ import ru.netology.nework.utils.StringArg
 import ru.netology.nework.viewmodel.PostViewModel
 import ru.netology.nework.viewmodel.WallViewModel
 
-class WallFragment: Fragment() {
+class WallFragment : Fragment() {
 
-    private val wallViewModel: WallViewModel by viewModels(
-        ownerProducer = ::requireParentFragment
-    )
+    private val wallViewModel: WallViewModel by viewModels()
 
-    private val postViewModel: PostViewModel by viewModels(
-        ownerProducer = ::requireParentFragment
-    )
+    private val postViewModel: PostViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,22 +41,18 @@ class WallFragment: Fragment() {
         val swipeRefresh = binding.swipeRefresh
 
         val userId = requireArguments().textArg!!.toLong()
-        wallViewModel.setUser(userId)
-        wallViewModel.loadUser()
-        wallViewModel.loadJob()
-        wallViewModel.loadPosts()
+        wallViewModel.refreshGeneral(userId)
 
-        wallViewModel.dataState.observe(viewLifecycleOwner){ state ->
+        wallViewModel.dataState.observe(viewLifecycleOwner) { state ->
             binding.progressBar.isVisible = state.refreshing || state.loading
         }
 
-        swipeRefresh.setOnRefreshListener{
+        swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
-            postViewModel.refresh()
             wallViewModel.refreshGeneral(userId)
         }
 
-        wallViewModel.user.observe(viewLifecycleOwner){user ->
+        wallViewModel.user.observe(viewLifecycleOwner) { user ->
             if (user.avatar.isNullOrBlank()) {
                 binding.avatar.setImageResource(R.drawable.sign_up_avatar_128)
             } else {
@@ -69,27 +61,32 @@ class WallFragment: Fragment() {
 
             binding.userName.text = user.name
         }
-        wallViewModel.job.observe(viewLifecycleOwner){ job ->
+
+        wallViewModel.job.observe(viewLifecycleOwner) { job ->
             if (job == null) {
                 binding.jobGroup.visibility = View.GONE
+                binding.jobDivider.visibility = View.GONE
             } else {
+                val jobStart = job.start.take(4) + " - "
+                val jobFinish = job.finish?.take(4)
                 binding.jobGroup.visibility = View.VISIBLE
-                binding.startJob.text = job.start
+                binding.jobDivider.visibility = View.VISIBLE
+                binding.startJob.text = jobStart
                 binding.endJob.text =
-                    if (!job.finish.isNullOrBlank()) job.finish else getString(R.string.now)
+                    if (!job.finish.isNullOrBlank()) jobFinish else getString(R.string.now)
                 binding.company.text = job.name
                 binding.position.text = job.position
                 binding.jobLinkText.isVisible = !job.link.isNullOrBlank()
                 binding.jobLinkButton.isVisible = !job.link.isNullOrBlank()
             }
+        }
 
-            binding.jobLinkButton.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(job?.link))
-                val linkIntent =
-                    Intent.createChooser(intent, this.getString(R.string.link_intent))
-                this.startActivity(linkIntent)
-            }
-
+        binding.jobLinkButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW,
+                Uri.parse(wallViewModel.job.value?.link))
+            val linkIntent =
+                Intent.createChooser(intent, this.getString(R.string.link_intent))
+            this.startActivity(linkIntent)
         }
 
         binding.backButton.setOnClickListener {

@@ -16,6 +16,15 @@ fun ImageView.loadCircle(url: String) {
         .into(this)
 }
 
+fun ImageView.loadFromLocalStorage(uri: Uri) {
+    Glide.with(this)
+        .load(uri)
+        .placeholder(R.drawable.loading_48)
+        .error(R.drawable.loading_error_48)
+        .timeout(5_000)
+        .into(this)
+}
+
 fun ImageView.loadCircleFromLocalStorage(uri: Uri) {
     Glide.with(this)
         .load(uri)

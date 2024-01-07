@@ -18,7 +18,6 @@ import ru.netology.nework.databinding.FeedFragmentBinding
 import ru.netology.nework.listener.EventOnInteractionListener
 import ru.netology.nework.listener.PostOnInteractionListener
 import ru.netology.nework.types.ErrorType
-import ru.netology.nework.viewmodel.AuthViewModel
 import ru.netology.nework.viewmodel.EventViewModel
 import ru.netology.nework.viewmodel.PostViewModel
 
@@ -32,10 +31,6 @@ class FeedFragment: Fragment() {
         ownerProducer = ::requireParentFragment
     )
 
-    val authViewModel: AuthViewModel by viewModels(
-        ownerProducer = ::requireParentFragment
-    )
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,6 +41,42 @@ class FeedFragment: Fragment() {
             container,
             false
         )
+
+        eventViewModel.isPostsShowed.observe(viewLifecycleOwner){
+            if(it){
+                binding.postsButton.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this.requireContext(),
+                        R.color.purple_light_background
+                    )
+                )
+                binding.eventsButton.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this.requireContext(),
+                        R.color.transparent
+                    )
+                )
+                binding.eventsParent.visibility = View.GONE
+                binding.emptyEvents.visibility = View.GONE
+                binding.postsParent.visibility = View.VISIBLE
+            } else {
+                binding.postsButton.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this.requireContext(),
+                        R.color.transparent
+                    )
+                )
+                binding.eventsButton.setBackgroundColor(
+                    ContextCompat.getColor(
+                        this.requireContext(),
+                        R.color.purple_light_background
+                    )
+                )
+                binding.eventsParent.visibility = View.VISIBLE
+                binding.emptyPosts.visibility = View.GONE
+                binding.postsParent.visibility = View.GONE
+            }
+        }
 
         val eventInteractionListener = EventOnInteractionListener(
             this@FeedFragment.requireActivity(),
@@ -63,6 +94,7 @@ class FeedFragment: Fragment() {
 
         val eventAdapter = EventAdapter(eventInteractionListener)
         val postAdapter = PostAdapter(postInteractionListener)
+
 
         binding.listEvent.adapter = eventAdapter
         binding.listEvent.addItemDecoration(
@@ -90,39 +122,11 @@ class FeedFragment: Fragment() {
 
 
         binding.eventsButton.setOnClickListener {
-            binding.postsButton.setBackgroundColor(
-                ContextCompat.getColor(
-                    this.requireContext(),
-                    R.color.transparent
-                )
-            )
-            binding.eventsButton.setBackgroundColor(
-                ContextCompat.getColor(
-                    this.requireContext(),
-                    R.color.purple_light_background
-                )
-            )
-            binding.eventsParent.visibility = View.VISIBLE
-            binding.emptyPosts.visibility = View.GONE
-            binding.postsParent.visibility = View.GONE
+            eventViewModel.isPostsShowed.value = false
         }
 
         binding.postsButton.setOnClickListener {
-            binding.postsButton.setBackgroundColor(
-                ContextCompat.getColor(
-                    this.requireContext(),
-                    R.color.purple_light_background
-                )
-            )
-            binding.eventsButton.setBackgroundColor(
-                ContextCompat.getColor(
-                    this.requireContext(),
-                    R.color.transparent
-                )
-            )
-            binding.eventsParent.visibility = View.GONE
-            binding.emptyEvents.visibility = View.GONE
-            binding.postsParent.visibility = View.VISIBLE
+            eventViewModel.isPostsShowed.value = true
         }
 
         eventViewModel.dataState.observe(viewLifecycleOwner) { state ->

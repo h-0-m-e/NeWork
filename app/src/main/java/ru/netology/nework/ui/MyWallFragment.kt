@@ -17,18 +17,16 @@ import ru.netology.nework.adapter.PostAdapter
 import ru.netology.nework.databinding.MyWallFragmentBinding
 import ru.netology.nework.extentions.loadWallAvatar
 import ru.netology.nework.listener.PostOnInteractionListener
-import ru.netology.nework.viewmodel.AuthViewModel
+import ru.netology.nework.viewmodel.MyWallViewModel
 import ru.netology.nework.viewmodel.PostViewModel
-import ru.netology.nework.viewmodel.WallViewModel
 
 class MyWallFragment: Fragment() {
 
-
-    private val wallViewModel: WallViewModel by viewModels()
+    private val myWallViewModel: MyWallViewModel by viewModels(
+        ownerProducer = ::requireParentFragment
+    )
 
     private val postViewModel: PostViewModel by viewModels()
-
-    private val authViewModel: AuthViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,24 +41,19 @@ class MyWallFragment: Fragment() {
 
         val swipeRefresh = binding.swipeRefresh
 
-        val userId = authViewModel.data.value!!.id
-        wallViewModel.setUser(userId)
-        wallViewModel.loadUser()
-        wallViewModel.loadJob()
-        wallViewModel.loadPosts()
+        myWallViewModel.refreshGeneral()
 
-        wallViewModel.dataState.observe(viewLifecycleOwner){ state ->
+        myWallViewModel.dataState.observe(viewLifecycleOwner){ state ->
             binding.progressBar.isVisible = state.refreshing || state.loading
         }
 
         swipeRefresh.setOnRefreshListener{
             binding.swipeRefresh.isRefreshing = false
-            postViewModel.refresh()
-            wallViewModel.refreshGeneral(userId)
+            myWallViewModel.refreshGeneral()
         }
 
 
-        wallViewModel.user.observe(viewLifecycleOwner){user ->
+        myWallViewModel.user.observe(viewLifecycleOwner){user ->
             if (user.avatar.isNullOrBlank()) {
                 binding.avatar.setImageResource(R.drawable.sign_up_avatar_128)
             } else {
@@ -70,29 +63,31 @@ class MyWallFragment: Fragment() {
             binding.userName.text = user.name
         }
 
-        wallViewModel.job.observe(viewLifecycleOwner){ job ->
+        myWallViewModel.job.observe(viewLifecycleOwner){ job ->
             if (job == null) {
                 binding.jobGroup.visibility = View.GONE
                 binding.addJobGroup.visibility = View.VISIBLE
             } else {
+                val jobStart = job.start.take(4) + " - "
+                val jobFinish = job.finish?.take(4)
                 binding.addJobGroup.visibility = View.GONE
                 binding.jobGroup.visibility = View.VISIBLE
-                binding.startJob.text = job.start
+                binding.startJob.text = jobStart
                 binding.endJob.text =
-                    if (!job.finish.isNullOrBlank()) job.finish else getString(R.string.now)
+                    if (!job.finish.isNullOrBlank()) jobFinish else getString(R.string.now)
                 binding.company.text = job.name
                 binding.position.text = job.position
                 binding.jobLinkText.isVisible = !job.link.isNullOrBlank()
                 binding.jobLinkButton.isVisible = !job.link.isNullOrBlank()
             }
+        }
 
-            binding.jobLinkButton.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(job?.link))
-                val linkIntent =
-                    Intent.createChooser(intent, this.getString(R.string.link_intent))
-                this.startActivity(linkIntent)
-            }
-
+        binding.jobLinkButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW,
+                Uri.parse(myWallViewModel.job.value?.link))
+            val linkIntent =
+                Intent.createChooser(intent, this.getString(R.string.link_intent))
+            this.startActivity(linkIntent)
         }
 
         val postInteractionListener = PostOnInteractionListener(
@@ -103,11 +98,7 @@ class MyWallFragment: Fragment() {
 
         val postAdapter = PostAdapter(postInteractionListener)
 
-        binding.list.adapter = postAdapter
-        wallViewModel.data.observe(viewLifecycleOwner) { data ->
-            postAdapter.submitList(data.posts)
-            binding.empty.isVisible = data.empty
-        }
+
         binding.list.addItemDecoration(
             DividerItemDecoration(
                 context,

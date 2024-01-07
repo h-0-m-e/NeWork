@@ -55,8 +55,7 @@
         app:layout_constraintBottom_toTopOf="@id/companyField"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toBottomOf="@id/backButton" />
 
     <TextView
         android:id="@+id/company"
@@ -135,9 +134,10 @@
         android:hint="@string/employment_date_hint"
         android:importantForAutofill="no"
         android:inputType="date"
+        android:maxLength="4"
         android:padding="@dimen/common_small_dimen"
         android:textSize="@dimen/common_medium_text_dimen"
-        app:layout_constraintBottom_toTopOf="@id/dismissalDateField"
+        app:layout_constraintBottom_toTopOf="@id/stillWorkCheckbox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/linkField" />
@@ -160,17 +160,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/medium_dimen"
-        android:layout_marginBottom="@dimen/medium_dimen"
+        android:layout_marginTop="@dimen/common_dimen"
         android:hint="@string/dismissal_date_hint"
+        android:maxLength="4"
         android:importantForAutofill="no"
         android:inputType="date"
         android:padding="@dimen/common_small_dimen"
         android:textSize="@dimen/common_medium_text_dimen"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@id/saveButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/employmentDateField" />
+        app:layout_constraintTop_toBottomOf="@id/stillWorkCheckbox" />
 
     <CheckBox
         android:id="@+id/stillWorkCheckbox"
@@ -178,22 +178,21 @@
         android:layout_height="wrap_content"
         android:text="@string/i_still_work_here"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintStart_toStartOf="@id/dismissalDateField"
+        app:layout_constraintStart_toStartOf="@id/employmentDateField"
         android:checked="false"
-        app:layout_constraintTop_toBottomOf="@id/dismissalDateField" />
+        app:layout_constraintTop_toBottomOf="@id/employmentDateField" />
 
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveButton"
         android:layout_width="@dimen/ultra_big_dimen"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/extra_big_dimen"
+        android:layout_marginTop="@dimen/common_extra_big_dimen"
         android:backgroundTint="@color/purple_500"
         android:text="@string/save"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dismissalDateField" />
+        app:layout_constraintTop_toBottomOf="@id/stillWorkCheckbox" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

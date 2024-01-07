@@ -17,7 +17,7 @@ import ru.netology.nework.dto.Job
 import ru.netology.nework.dto.User
 import ru.netology.nework.model.PostsFeedModel
 import ru.netology.nework.model.PostsFeedModelState
-import ru.netology.nework.repository.WallRepository
+import ru.netology.nework.repository.MyWallRepository
 import ru.netology.nework.types.ErrorType
 
 private val emptyUser = User(
@@ -27,13 +27,12 @@ private val emptyUser = User(
     avatar = null
 )
 
-class WallViewModel(private val application: Application) : AndroidViewModel(application) {
+class MyWallViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val userId = MutableLiveData(0L)
+//    private val myId = AppAuth.getInstance().data.value!!.id
 
-    private var repository = WallRepository(
-        AppDb.getInstance(application).appDao(),
-        userId
+    private var repository = MyWallRepository(
+        AppDb.getInstance(application).appDao()
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -58,7 +57,7 @@ class WallViewModel(private val application: Application) : AndroidViewModel(app
         get() = _dataState
 
 
-    fun loadPosts() = viewModelScope.launch {
+    private fun loadPosts() = viewModelScope.launch {
         _dataState.value = PostsFeedModelState(loading = true)
         try {
             repository.getWall()
@@ -68,7 +67,7 @@ class WallViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 
-    fun loadUser() = viewModelScope.launch {
+    private fun loadUser() = viewModelScope.launch {
         _dataState.value = PostsFeedModelState(loading = true)
         try {
             user.value = repository.getUser()
@@ -88,20 +87,29 @@ class WallViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 
-    fun refreshGeneral(userId: Long) {
-        setUser(userId)
+    fun saveJob(job: Job) = viewModelScope.launch {
+        try {
+            repository.saveJob(job)
+            _dataState.value = PostsFeedModelState()
+        } catch (e: Exception) {
+            _dataState.value = PostsFeedModelState(error = ErrorType.PROFILE_CHANGES)
+        }
+    }
+
+    fun deleteJob() = viewModelScope.launch {
+        try {
+            repository.deleteJob(job.value!!.id)
+            _dataState.value = PostsFeedModelState()
+            job.postValue(null)
+        } catch (e: Exception) {
+            _dataState.value = PostsFeedModelState(error = ErrorType.PROFILE_CHANGES)
+        }
+    }
+
+    fun refreshGeneral() {
         loadUser()
         loadJob()
         loadPosts()
-    }
-
-
-    fun setUser(id: Long){
-        userId.value = id
-        repository = WallRepository(
-            AppDb.getInstance(application).appDao(),
-            userId
-        )
     }
 
 }

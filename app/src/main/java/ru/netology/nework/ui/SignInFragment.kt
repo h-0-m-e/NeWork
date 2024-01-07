@@ -13,26 +13,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.netology.nework.R
 import ru.netology.nework.databinding.SignInFragmentBinding
 import ru.netology.nework.utils.AndroidUtils
-import ru.netology.nework.utils.ConnectionChecker
-import ru.netology.nework.viewmodel.EventViewModel
-import ru.netology.nework.viewmodel.PostViewModel
 import ru.netology.nework.viewmodel.SignInUpViewModel
 
 class SignInFragment: Fragment() {
 
     private val signViewModel: SignInUpViewModel by viewModels(
-        ownerProducer = ::requireParentFragment
-    )
-
-    private val postViewModel: PostViewModel by viewModels(
-        ownerProducer = ::requireParentFragment
-    )
-
-    private val eventViewModel: EventViewModel by viewModels(
         ownerProducer = ::requireParentFragment
     )
 
@@ -50,9 +38,8 @@ class SignInFragment: Fragment() {
         signViewModel.dataState.observe(viewLifecycleOwner){state ->
             binding.loading.isVisible = state.loading
             binding.signInButton.isVisible = !state.loading
+            binding.incorrectError.isVisible = state.error
             if (state.success && state.signedIn){
-//                postViewModel.loadPosts()
-//                eventViewModel.loadEvents()
                 signViewModel.clean()
                 findNavController().navigate(R.id.action_signInFragment_to_feedFragment)
             }
@@ -99,7 +86,7 @@ class SignInFragment: Fragment() {
         return binding.root
     }
 
-    fun isOnline(): Boolean {
+    private fun isOnline(): Boolean {
         val connectivityManager =
             this.requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities =

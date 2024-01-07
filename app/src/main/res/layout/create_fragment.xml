@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/extra_big_dimen"
     tools:context=".ui.CreateFragment">
 
     <ImageButton
@@ -17,25 +18,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/typeMenu"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_small_dimen"
-        android:hint="@string/type"
-        app:layout_constraintEnd_toStartOf="@id/publishButton"
+    <RadioGroup
+        android:id="@+id/radioType"
         app:layout_constraintStart_toEndOf="@id/backButton"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintEnd_toStartOf="@id/publishButton"
+        app:layout_constraintTop_toTopOf="@id/backButton"
+        app:layout_constraintBottom_toBottomOf="@id/backButton"
+        android:visibility="visible"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView"
+        <RadioButton
+            android:id="@+id/radioPost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="none"
-            android:text="@string/post" />
+            android:checked="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:text="@string/post"/>
 
-    </com.google.android.material.textfield.TextInputLayout>
+        <RadioButton
+            android:id="@+id/radioEvent"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="@dimen/common_dimen"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:text="@string/event"/>
+    </RadioGroup>
 
     <ImageButton
         android:id="@+id/publishButton"
@@ -57,7 +66,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         tools:visibility="visible"
-        app:constraint_referenced_ids="eventDate, eventDateText, offlineCheckbox, eventSpeakers,addSpeaker, thirdSpeakerAvatar" />
+        app:constraint_referenced_ids="eventDate, eventDateText, offlineCheckbox, editDateTime, eventSettingsDivider" />
 
     <TextView
         android:id="@+id/eventDate"
@@ -68,22 +77,30 @@
         android:textColor="@color/purple_small_button"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/typeMenu" />
+        app:layout_constraintTop_toBottomOf="@id/backButton" />
 
-    <EditText
+    <TextView
         android:id="@+id/eventDateText"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/common_dimen"
         android:layout_marginEnd="@dimen/common_dimen"
-        android:autofillHints="false"
-        android:hint="@string/enter_date"
-        android:inputType="datetime"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/offlineCheckbox"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/eventDate"
-        tools:ignore="TouchTargetSizeCheck"
-        tools:text="23.12.1999" />
+        android:text="@string/not_chosen" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/editDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/edit_24"
+        android:layout_marginStart="@dimen/common_dimen"
+        app:layout_constraintTop_toTopOf="@id/eventDateText"
+        app:layout_constraintStart_toEndOf="@id/eventDateText"
+        app:layout_constraintBottom_toBottomOf="@id/eventDateText"
+        android:text="@string/edit"/>
 
     <CheckBox
         android:id="@+id/offlineCheckbox"
@@ -92,74 +109,34 @@
         android:layout_marginStart="@dimen/common_dimen"
         android:text="@string/offline_event"
         android:checked="true"
+        android:layout_marginTop="@dimen/common_dimen"
         app:layout_constraintTop_toBottomOf="@id/eventDateText"
         app:layout_constraintStart_toStartOf="parent"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-
-    <TextView
-        android:id="@+id/eventSpeakers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/common_dimen"
-        android:layout_marginEnd="@dimen/common_dimen"
-        android:layout_marginBottom="@dimen/common_dimen"
-        android:text="@string/speakers"
-        android:textColor="@color/purple_small_button"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/offlineCheckbox" />
-
-    <ImageButton
-        android:id="@+id/addSpeaker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/common_dimen"
-        android:layout_marginTop="@dimen/small_dimen"
-        android:background="@color/transparent"
-        android:contentDescription="@string/def_desc"
-        android:src="@drawable/add_circle_48"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventSpeakers" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/thirdSpeakerAvatar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/common_dimen"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/addSpeaker"
-        app:layout_constraintTop_toBottomOf="@id/eventSpeakers"
-        tools:listitem="@layout/speaker_tag_create" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/eventSettingsButton"
-        style="@style/Widget.AppTheme.EventSettingsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/common_small_dimen"
-        android:background="@color/transparent"
-        android:checkable="true"
-        android:contentDescription="@string/def_desc"
-        android:visibility="gone"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@id/eventGroupBarrier"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/thirdSpeakerAvatar" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/eventGroupBarrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="typeMenu, eventSettingsButton, thirdSpeakerAvatar" />
+        app:constraint_referenced_ids="backButton, offlineCheckbox" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/eventSettingsDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/eventGroupBarrier"/>
 
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="@dimen/common_extra_big_dimen"
+        app:layout_constraintBottom_toTopOf="@id/attachmentButton"
         app:layout_constraintTop_toBottomOf="@id/eventGroupBarrier">
 
         <LinearLayout
@@ -206,7 +183,7 @@
                     app:srcCompat="@drawable/clear_24" />
             </FrameLayout>
 
-            <FrameLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/videoPreviewContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -214,32 +191,28 @@
 
                 <ImageView
                     android:id="@+id/videoPreview"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     android:adjustViewBounds="true"
-
                     android:contentDescription="@string/def_desc"
                     android:padding="@dimen/common_dimen"
-                    tools:srcCompat="@drawable/test_image" />
+                    app:srcCompat="@drawable/video_file_48" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/clearVideo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
+                    app:layout_constraintStart_toEndOf="@id/videoPreview"
+                    app:layout_constraintTop_toTopOf="@id/videoPreview"
+                    app:layout_constraintBottom_toBottomOf="@id/videoPreview"
                     android:contentDescription="@string/def_desc"
                     app:fabSize="mini"
                     app:srcCompat="@drawable/clear_24" />
 
-                <ImageButton
-                    android:id="@+id/playVideo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@color/transparent"
-                    android:contentDescription="@string/def_desc"
-                    app:srcCompat="@drawable/play_80" />
-            </FrameLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linkContainer"
@@ -265,7 +238,6 @@
                     android:layout_marginEnd="@dimen/common_dimen"
                     android:autofillHints="false"
                     android:hint="@string/add_link"
-                    android:inputType="datetime"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/link"

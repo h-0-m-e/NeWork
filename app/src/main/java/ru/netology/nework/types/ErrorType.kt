@@ -2,5 +2,6 @@ package ru.netology.nework.types
 
 enum class ErrorType {
     LOADING,
-    SAVE
+    SAVE,
+    PROFILE_CHANGES
 }

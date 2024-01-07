@@ -14,13 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
                     <ProgressBar
                         android:id="@+id/progressBar"
@@ -214,6 +210,7 @@
                         app:constraint_referenced_ids="startJob, addJobButton, addJobText" />
 
                     <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/jobDivider"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -224,17 +221,16 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/list"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
                         android:layout_marginTop="@dimen/small_dimen"
                         android:background="@color/white"
                         android:paddingBottom="60dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintTop_toBottomOf="@id/jobBarrier"
                         tools:listitem="@layout/card_post" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </ScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

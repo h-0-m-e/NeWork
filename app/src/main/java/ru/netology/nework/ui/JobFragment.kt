@@ -1,22 +1,29 @@
 package ru.netology.nework.ui
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import ru.netology.nework.R
 import ru.netology.nework.databinding.JobFragmentBinding
 import ru.netology.nework.dto.Job
-import ru.netology.nework.viewmodel.WallViewModel
+import ru.netology.nework.viewmodel.MyWallViewModel
+import java.util.Calendar
+import javax.xml.datatype.DatatypeConstants.MONTHS
 
 class JobFragment : Fragment() {
 
-    private val wallViewModel: WallViewModel by viewModels()
+    private val myWallViewModel: MyWallViewModel by viewModels(
+        ownerProducer = ::requireParentFragment
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,21 +42,31 @@ class JobFragment : Fragment() {
 
         var jobIsReady: Boolean
 
-        if (wallViewModel.job.value?.id != 0) {
-            binding.deleteButton.visibility = View.VISIBLE
-            binding.positionField.setText(wallViewModel.job.value?.position)
-            binding.companyField.setText(wallViewModel.job.value?.name)
-            binding.linkField.setText(wallViewModel.job.value?.link ?: "")
-            binding.employmentDateField.setText(wallViewModel.job.value?.start)
-            binding.dismissalDateField.setText(wallViewModel.job.value?.finish)
-            binding.stillWorkCheckbox.isChecked = !wallViewModel.job.value?.finish.isNullOrBlank()
-        } else {
-            binding.deleteButton.visibility = View.GONE
-            binding.stillWorkCheckbox.isChecked = false
+        myWallViewModel.job.observe(viewLifecycleOwner) { job ->
+            if (job != null) {
+                binding.positionField.setText(job.position)
+                binding.companyField.setText(job.name)
+                binding.linkField.setText(job.link)
+                binding.employmentDateField.setText(job.start)
+                binding.dismissalDateField.setText(job.finish)
+                binding.stillWorkCheckbox.isChecked = job.finish.isNullOrBlank()
+                binding.deleteButton.visibility = View.VISIBLE
+            } else {
+                binding.stillWorkCheckbox.isChecked = false
+                binding.deleteButton.visibility = View.GONE
+            }
         }
 
-        binding.dismissalDate.isVisible = !binding.stillWorkCheckbox.isChecked
-        binding.dismissalDateField.isVisible = !binding.stillWorkCheckbox.isChecked
+        binding.stillWorkCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked){
+                binding.dismissalDateField.isVisible = false
+                binding.dismissalDate.isVisible = false
+            }else{
+                binding.dismissalDateField.isVisible = true
+                binding.dismissalDate.isVisible = true
+            }
+        }
+
 
         binding.saveButton.setOnClickListener {
             jobIsReady = true
@@ -68,7 +85,11 @@ class JobFragment : Fragment() {
             )
 
             binding.employmentDate.setTextColor(
-                if (binding.employmentDateField.text.isNullOrBlank())
+                if (binding.employmentDateField.text.isNullOrBlank()
+                    || binding.employmentDateField.text.toString().toInt() > Calendar.getInstance()
+                        .get(Calendar.YEAR)
+                    || binding.employmentDateField.text.toString().toInt() < 1900
+                )
                     redColor.also { jobIsReady = false }
                 else
                     defaultColor
@@ -82,7 +103,12 @@ class JobFragment : Fragment() {
             )
 
             binding.dismissalDate.setTextColor(
-                if (binding.dismissalDateField.text.isNullOrBlank()
+                if ((binding.dismissalDateField.text.isNullOrBlank()
+                            || binding.dismissalDateField.text.toString()
+                        .toInt() > Calendar.getInstance()
+                        .get(Calendar.YEAR)
+                            || binding.dismissalDateField.text.toString()
+                        .toInt() < binding.employmentDateField.text.toString().toInt())
                     && !binding.stillWorkCheckbox.isChecked
                 )
                     redColor.also { jobIsReady = false }
@@ -91,24 +117,24 @@ class JobFragment : Fragment() {
             )
 
             if (jobIsReady) {
-                wallViewModel.saveJob(
+                myWallViewModel.saveJob(
                     Job(
-                        id = 1,
+                        id = myWallViewModel.job.value?.id ?: 1,
                         name = binding.companyField.text.toString().trim(),
                         position = binding.positionField.text.toString().trim(),
-                        start = binding.employmentDateField.text.toString().trim(),
+                        start = binding.employmentDateField.text.toString() + "-01-01T00:00:00.003000Z",
                         finish = if (binding.stillWorkCheckbox.isChecked) null
-                        else binding.dismissalDateField.text.toString().trim(),
+                        else binding.dismissalDateField.text.toString() + "-01-01T00:00:00.003000Z",
                         link = binding.linkField.text.toString().trim()
                     )
                 )
-                wallViewModel.loadJob()
+                myWallViewModel.loadJob()
                 findNavController().navigate(R.id.action_jobFragment_to_myWallFragment)
             }
         }
 
         binding.deleteButton.setOnClickListener {
-            wallViewModel.deleteJob()
+            myWallViewModel.deleteJob()
             findNavController().navigate(R.id.action_jobFragment_to_myWallFragment)
         }
 

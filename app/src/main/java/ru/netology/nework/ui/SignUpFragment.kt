@@ -5,28 +5,23 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.net.toFile
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.crazylegend.imagepicker.pickers.SingleImagePicker
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ru.netology.nework.R
 import ru.netology.nework.databinding.SignUpFragmentBinding
-import ru.netology.nework.extentions.loadCircle
 import ru.netology.nework.extentions.loadCircleFromLocalStorage
 import ru.netology.nework.model.AttachmentModel
 import ru.netology.nework.utils.AndroidUtils
-import ru.netology.nework.utils.ConnectionChecker
 import ru.netology.nework.viewmodel.EventViewModel
 import ru.netology.nework.viewmodel.PostViewModel
 import ru.netology.nework.viewmodel.SignInUpViewModel
@@ -77,7 +72,7 @@ class SignUpFragment: Fragment() {
         }
 
         binding.avatar.setOnClickListener {
-            SingleImagePicker.showPicker(context = this.requireContext()){
+            SingleImagePicker.showPicker(context = this.requireActivity()){
                 pickedAvatar = AttachmentModel(it.contentUri, File(it.contentUri.path!!))
                 if(it.contentUri.toString().isNotBlank()) {
                     binding.avatar.loadCircleFromLocalStorage(it.contentUri)
@@ -106,12 +101,12 @@ class SignUpFragment: Fragment() {
                     MaterialAlertDialogBuilder(this.requireContext())
                         .setTitle(resources.getString(R.string.no_avatar))
                         .setMessage(resources.getString(R.string.no_avatar_msg))
-                        .setNegativeButton(resources.getString(R.string.cancel)) { dialog, which ->
+                        .setNegativeButton(resources.getString(R.string.cancel)) { _, _ ->
                             SingleImagePicker.showPicker(context = this.requireContext()){
                                 pickedAvatar = AttachmentModel(it.contentUri, it.contentUri.toFile())
                             }
                         }
-                        .setPositiveButton(resources.getString(R.string.resume)) { dialog, which ->
+                        .setPositiveButton(resources.getString(R.string.resume)) { _, _ ->
                             signViewModel.signUpWithNoAvatar(login,password,name)
                         }
                         .show()
@@ -136,7 +131,7 @@ class SignUpFragment: Fragment() {
         return binding.root
     }
 
-    fun isOnline(): Boolean {
+    private fun isOnline(): Boolean {
         val connectivityManager =
             this.requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities =
