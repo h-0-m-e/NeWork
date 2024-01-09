@@ -6,11 +6,15 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import ru.netology.nework.api.AppApi
 import ru.netology.nework.dao.AppDao
 import ru.netology.nework.dto.Attachment
+import ru.netology.nework.dto.MediaResponse
 import ru.netology.nework.dto.Post
 import ru.netology.nework.entity.PostEntity
 import ru.netology.nework.entity.toEntity
@@ -94,62 +98,74 @@ class PostRepository(private val appDao: AppDao, private val myId: Int) {
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
-
             val body = response.body() ?: throw ApiError(response.code(), response.message())
+
             appDao.postInsert(PostEntity.fromDto(body))
+
         } catch (e: IOException) {
             throw NetworkError
-        } catch (e: Exception) {
-            throw ru.netology.nework.error.UnknownError
         }
     }
 
     suspend fun saveWithAttachment(post: Post, model: AttachmentModel, type: AttachmentType) {
-
         try {
-            val mediaUrl = uploadMedia(model)
-
-            val response = AppApi.service.postSave(
-                post.copy(
-                    attachment =
-                    Attachment(
-                        mediaUrl,
-                        type
-                    )
+            val media = upload(model, type)
+            val posts = post.copy(
+                attachment = Attachment(
+                    media.url,
+                    type = type
                 )
             )
+            val response = AppApi.service.postSave(posts)
+
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
-
             val body = response.body() ?: throw ApiError(response.code(), response.message())
             appDao.postInsert(PostEntity.fromDto(body))
         } catch (e: IOException) {
             throw NetworkError
-        } catch (e: Exception) {
-            throw ru.netology.nework.error.UnknownError
         }
     }
 
-    private suspend fun uploadMedia(model: AttachmentModel): String {
-        val response = AppApi.service.uploadMedia(
-            MultipartBody.Part.createFormData("file", "file", model.file.asRequestBody())
-        )
+    private suspend fun upload(model: AttachmentModel, type: AttachmentType): MediaResponse {
+        try {
+            val media = MultipartBody.Part.createFormData(
+                "file",
+                model.file.name,
+                when(type){
+                    AttachmentType.IMAGE -> model.file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                    AttachmentType.AUDIO -> model.file.asRequestBody("audio/mpeg".toMediaTypeOrNull())
+                    AttachmentType.VIDEO -> model.file.asRequestBody("video/mp4".toMediaTypeOrNull())
+                }
+            )
 
-        if (!response.isSuccessful) {
-            throw ApiError(response.code(), response.message())
+//            val media = MultipartBody.Builder()
+//                .setType(MultipartBody.FORM)
+//                .addFormDataPart("file", model.file.name, model.file.asRequestBody("*/*".toMediaTypeOrNull())).build()
+
+//            val fileRequestBody =
+//                model.uri.path!!.toRequestBody("*/*".toMediaTypeOrNull())
+//            val filePart = MultipartBody.Part.createFormData("file","file_name", fileRequestBody)
+
+            val response = AppApi.service.uploadMedia(media)
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+
+            return response.body() ?: throw ApiError(response.code(), response.message())
+        } catch (e: IOException) {
+            throw NetworkError
         }
-
-        return requireNotNull(response.body())
     }
 
     suspend fun removeById(id: Long) {
         try {
-            appDao.postRemoveById(id)
             val response = AppApi.service.postRemoveById(id)
             if (!response.isSuccessful) {
                 throw RuntimeException(response.message())
             }
+            appDao.postRemoveById(id)
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {

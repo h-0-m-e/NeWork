@@ -89,6 +89,7 @@
         android:layout_marginEnd="@dimen/common_dimen"
         android:layout_marginStart="@dimen/common_dimen"
         android:visibility="gone"
+        tools:visibility="visible"
         android:layout_marginTop="@dimen/common_dimen"
         app:layout_constraintBottom_toTopOf="@id/attachmentBarrier"
         app:layout_constraintEnd_toEndOf="parent"

@@ -150,6 +150,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="top"
+                android:textColorHint="@color/gray"
                 android:hint="@string/create_hint"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
@@ -161,14 +162,14 @@
             <FrameLayout
                 android:id="@+id/photoPreviewContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/photoPreview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
+                    android:visibility="gone"
                     android:contentDescription="@string/def_desc"
                     android:padding="@dimen/common_dimen"
                     tools:srcCompat="@drawable/test_image" />
@@ -178,6 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    android:visibility="gone"
                     android:contentDescription="@string/def_desc"
                     app:fabSize="mini"
                     app:srcCompat="@drawable/clear_24" />
@@ -186,13 +188,13 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/videoPreviewContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/videoPreview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -205,6 +207,7 @@
                     android:id="@+id/clearVideo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     app:layout_constraintStart_toEndOf="@id/videoPreview"
                     app:layout_constraintTop_toTopOf="@id/videoPreview"
                     app:layout_constraintBottom_toBottomOf="@id/videoPreview"
@@ -249,15 +252,14 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/audioPreviewContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                tools:visibility="visible">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/audioPreview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
+                    android:visibility="gone"
                     android:background="@color/transparent"
                     android:contentDescription="@string/def_desc"
                     android:padding="@dimen/common_dimen"
@@ -270,6 +272,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/common_text_dimen"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/audioPreview"
                     app:layout_constraintEnd_toStartOf="@id/clearAudio"
                     app:layout_constraintStart_toEndOf="@id/audioPreview"
@@ -281,6 +284,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    android:visibility="gone"
                     android:layout_margin="@dimen/common_dimen"
                     android:background="@color/transparent"
                     android:contentDescription="@string/def_desc"

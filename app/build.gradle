@@ -22,7 +22,11 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            manifestPlaceholders.usesCleartextTraffic = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            manifestPlaceholders.usesCleartextTraffic = true
         }
     }
     compileOptions {

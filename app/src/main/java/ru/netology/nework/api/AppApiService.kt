@@ -18,6 +18,7 @@ import ru.netology.nework.BuildConfig
 import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.dto.Event
 import ru.netology.nework.dto.Job
+import ru.netology.nework.dto.MediaResponse
 import ru.netology.nework.dto.Post
 import ru.netology.nework.dto.User
 import java.util.concurrent.TimeUnit
@@ -114,7 +115,7 @@ interface AppApiService {
 
     @Multipart
     @POST("media/")
-    suspend fun uploadMedia(@Part file: MultipartBody.Part): Response<String>
+    suspend fun uploadMedia(@Part file: MultipartBody.Part): Response<MediaResponse>
 
 }
 

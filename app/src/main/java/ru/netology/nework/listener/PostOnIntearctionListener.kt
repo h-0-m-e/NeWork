@@ -5,12 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.Navigation
+import androidx.navigation.Navigation.findNavController
 import ru.netology.nework.R
-import ru.netology.nework.dto.Event
 import ru.netology.nework.dto.Post
 import ru.netology.nework.ui.CreateFragment.Companion.textArg
-import ru.netology.nework.viewmodel.EventViewModel
 import ru.netology.nework.viewmodel.PostViewModel
 
 open class PostOnInteractionListener(
@@ -31,7 +29,7 @@ open class PostOnInteractionListener(
     }
 
     open fun onOpenPhoto(post: Post){
-        Navigation.findNavController(view).navigate(R.id.photoFragment,
+        findNavController(view).navigate(R.id.photoFragment,
             Bundle().apply {
                 textArg = post.attachment!!.url
             })
@@ -45,14 +43,14 @@ open class PostOnInteractionListener(
     }
 
     open fun onOpenPost(post: Post){
-        Navigation.findNavController(view).navigate(R.id.postFragment,
+        findNavController(view).navigate(R.id.postFragment,
             Bundle().apply {
                 textArg = post.id.toString()
             })
     }
 
     open fun onOpenUserWall(id: String){
-        Navigation.findNavController(view).navigate(R.id.wallFragment,
+        findNavController(view).navigate(R.id.wallFragment,
             Bundle().apply {
                 textArg = id
             })
@@ -64,12 +62,12 @@ open class PostOnInteractionListener(
 
     open fun onRemove(post: Post) {
         viewModel.removeById(post.id.toLong())
-        Navigation.findNavController(view).popBackStack()
+        findNavController(view).navigate(R.id.feedFragment)
     }
 
     open fun onEdit(post: Post) {
         viewModel.edit(post)
-        Navigation.findNavController(view).navigate(R.id.createFragment,
+        findNavController(view).navigate(R.id.createFragment,
             Bundle().apply {
                 textArg = post.id.toString()
             })

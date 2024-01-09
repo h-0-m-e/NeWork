@@ -41,6 +41,8 @@ class PostViewHolder(
             nickname.text = post.author
             postText.text = post.content
             published.text = CounterUtil.countPublishDate(post.published)
+            link.text = post.link
+            link.isVisible = !post.link.isNullOrBlank()
             like.text = CounterUtil.shortingByLetters(post.likes)
             like.isChecked = post.likedByMe
             if (post.authorAvatar.isNullOrBlank()){

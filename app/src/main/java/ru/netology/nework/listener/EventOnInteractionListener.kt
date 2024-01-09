@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import ru.netology.nework.R
@@ -63,6 +64,7 @@ open class EventOnInteractionListener(
 
     open fun onRemove(event: Event) {
         viewModel.removeById(event.id.toLong())
+        findNavController(view).navigate(R.id.feedFragment)
     }
 
     open fun onEdit(event: Event) {
