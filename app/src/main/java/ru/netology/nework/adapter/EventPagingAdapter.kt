@@ -24,7 +24,7 @@ class EventPagingAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventPagingViewHolder {
         val binding = CardEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return EventPagingViewHolder(binding, eventOnInteractionListener)
+        return EventPagingViewHolder( binding, eventOnInteractionListener)
     }
 
     override fun onBindViewHolder(holder: EventPagingViewHolder, position: Int) {

@@ -149,7 +149,7 @@
         android:text="@string/speakers"
         android:textColor="@color/purple_small_button"
         android:textStyle="bold"
-        tools:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/eventDateText" />
 
@@ -161,7 +161,7 @@
         android:layout_marginStart="@dimen/common_medium_dimen"
         android:background="@color/transparent"
         android:contentDescription="@string/def_desc"
-        tools:visibility="gone"
+        tools:visibility="visible"
         android:src="@drawable/publication_avatar_48"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="@id/secondSpeakerAvatar"
@@ -176,8 +176,8 @@
         android:layout_marginStart="@dimen/common_medium_dimen"
         android:background="@color/transparent"
         android:contentDescription="@string/def_desc"
-        android:src="@drawable/circle_54"
-        tools:visibility="gone"
+        android:src="@drawable/circle_48"
+        tools:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="@id/firstSpeakerAvatar"
         app:layout_constraintTop_toBottomOf="@id/eventSpeakers" />
@@ -190,12 +190,12 @@
         android:layout_marginStart="@dimen/common_medium_dimen"
         android:background="@color/transparent"
         android:contentDescription="@string/def_desc"
-        tools:visibility="gone"
+        tools:visibility="visible"
         android:src="@drawable/publication_avatar_48"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/attachmentBarrier"
+        app:layout_constraintBottom_toBottomOf="@id/firstSpeakerAvatar"
         app:layout_constraintStart_toStartOf="@id/firstSpeakerAvatar"
-        app:layout_constraintTop_toBottomOf="@id/eventSpeakers" />
+        app:layout_constraintTop_toTopOf="@id/firstSpeakerAvatar" />
 
     <ImageButton
         android:id="@+id/firstSpeakerBackground"
@@ -204,8 +204,8 @@
         android:layout_marginVertical="@dimen/pre_common_dimen"
         android:background="@color/transparent"
         android:contentDescription="@string/def_desc"
-        android:src="@drawable/circle_54"
-        tools:visibility="gone"
+        android:src="@drawable/circle_48"
+        tools:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="@id/eventSpeakers"
         app:layout_constraintTop_toBottomOf="@id/eventSpeakers" />
@@ -217,7 +217,7 @@
         android:layout_marginTop="@dimen/common_dimen"
         android:background="@color/transparent"
         android:contentDescription="@string/def_desc"
-        tools:visibility="gone"
+        tools:visibility="visible"
         android:src="@drawable/publication_avatar_48"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="@id/eventSpeakers"
@@ -226,7 +226,7 @@
     <TextView
         android:id="@+id/speakersMore"
         android:layout_width="0dp"
-        tools:visibility="gone"
+        tools:visibility="visible"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/extra_small_dimen"
         app:layout_constraintBottom_toBottomOf="@id/speakersMoreText"
@@ -238,7 +238,7 @@
         android:id="@+id/speakersMoreText"
         android:layout_width="0dp"
         android:text="@string/and"
-        tools:visibility="gone"
+        tools:visibility="visible"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/common_dimen"
         app:layout_constraintBottom_toBottomOf="@id/thirdSpeakerAvatar"
@@ -246,12 +246,34 @@
         app:layout_constraintTop_toTopOf="@id/thirdSpeakerAvatar"
         tools:text="And" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/speakersList"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/common_dimen"
+        app:layout_constraintTop_toBottomOf="@id/eventSpeakers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:itemCount="23"
+        tools:listitem="@layout/card_speaker"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/hideSpeakersList"
+        android:layout_width="wrap_content"
+        android:text="@string/show"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_dimen"
+        app:layout_constraintStart_toEndOf="@id/eventSpeakers"
+        app:layout_constraintTop_toTopOf="@id/eventSpeakers"
+        app:layout_constraintBottom_toBottomOf="@id/eventSpeakers"/>
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/attachmentBarrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids=" eventDateText,firstSpeakerBackground" />
+        app:constraint_referenced_ids=" eventDateText,firstSpeakerBackground, speakersList" />
 
     <ImageView
         android:id="@+id/photo"

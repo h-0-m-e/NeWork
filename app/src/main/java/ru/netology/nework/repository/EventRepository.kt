@@ -16,6 +16,7 @@ import ru.netology.nework.dto.Attachment
 import ru.netology.nework.dto.Event
 import ru.netology.nework.dto.MediaResponse
 import ru.netology.nework.dto.Post
+import ru.netology.nework.dto.User
 import ru.netology.nework.entity.EventEntity
 import ru.netology.nework.entity.toEntity
 import ru.netology.nework.error.ApiError
@@ -27,9 +28,9 @@ import java.io.IOException
 
 class EventRepository(
     private val appDao: AppDao,
-    private val  myId: Int,
+    private val myId: Int,
     private val api: AppApi
-    ) {
+) {
 //    val data: Flow<List<Event>> =
 //        appDao.eventGetAll().map { it.map(EventEntity::toDto) }
 
@@ -71,17 +72,19 @@ class EventRepository(
                         likes = it.likeOwnerIds.size.toLong(),
                         ownedByMe = it.authorId == myId,
                         taggedMe = it.speakerIds.contains(myId),
-                        speakersAvatarUrls = getUsersAvatarUrls(it.speakerIds)
+                        speakersAvatarUrls = if (it.speakerIds.isNotEmpty())
+                            getUsersAvatarUrls(it.speakerIds)
+                        else emptyList()
                     )
                 )
             }
         )
     }
 
-    private suspend fun getUsersAvatarUrls(userIds: List<Int>): List<String> {
+    suspend fun getUsersAvatarUrls(userIds: List<Int>): List<String> {
         val userAvatarUrls = mutableListOf<String>()
-        for (user in userIds){
-            val response = api.service.userGet(user.toLong())
+        for (user in userIds) {
+            val response = api.service.userGet(user.toString())
             if (!response.isSuccessful) {
                 throw RuntimeException(response.message())
             }
@@ -153,7 +156,7 @@ class EventRepository(
             val media = MultipartBody.Part.createFormData(
                 "file",
                 model.file.name,
-                when(type){
+                when (type) {
                     AttachmentType.IMAGE -> model.file.asRequestBody("image/jpeg".toMediaTypeOrNull())
                     AttachmentType.AUDIO -> model.file.asRequestBody("audio/mpeg".toMediaTypeOrNull())
                     AttachmentType.VIDEO -> model.file.asRequestBody("video/mp4".toMediaTypeOrNull())
@@ -197,6 +200,18 @@ class EventRepository(
     suspend fun getById(id: Long): Event {
         try {
             val response = api.service.eventGetById(id.toString())
+            if (!response.isSuccessful) {
+                throw RuntimeException(response.message())
+            }
+            return response.body() ?: throw ApiError(response.code(), response.message())
+        } catch (e: IOException) {
+            throw NetworkError
+        }
+    }
+
+    suspend fun getUserById(id: Int): User {
+        try {
+            val response = api.service.userGet(id.toString())
             if (!response.isSuccessful) {
                 throw RuntimeException(response.message())
             }

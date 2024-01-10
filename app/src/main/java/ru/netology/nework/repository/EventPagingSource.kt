@@ -16,18 +16,16 @@ class EventPagingSource(
         try {
             val result = when (params) {
                 is LoadParams.Append -> {
-                    api.service.eventGetLatest(params.loadSize)
-                }
-
-                is LoadParams.Prepend -> {
                     api.service.eventGetBefore(id = params.key, count = params.loadSize)
                 }
 
-                is LoadParams.Refresh -> return LoadResult.Page(
-                    data = emptyList(),
-                    nextKey = null,
-                    prevKey = params.key
-                )
+                is LoadParams.Prepend -> {
+                    api.service.eventGetAfter(id = params.key, count = params.loadSize)
+                }
+
+                is LoadParams.Refresh -> {
+                    api.service.eventGetLatest(params.loadSize)
+                }
             }
 
             if (!result.isSuccessful) {

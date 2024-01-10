@@ -99,8 +99,8 @@ interface AppApiService {
         @Query("count") count: Int,
     ): Response<List<Event>>
 
-    @GET("users/{id}/")
-    suspend fun userGet(@Path("id") id: Long): Response<User>
+    @GET("users/{user_id}/")
+    suspend fun userGet(@Path("user_id") id: String): Response<User>
 
     @GET("{user_id}/jobs/")
     suspend fun jobGet(@Path("user_id") userId: Long): Response<List<Job>>

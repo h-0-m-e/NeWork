@@ -20,12 +20,13 @@ import ru.netology.nework.types.EventType
 import ru.netology.nework.utils.CounterUtil
 
 class EventAdapter(
-    private val eventOnInteractionListener: EventOnInteractionListener
+    private val isItEventFragment: Boolean,
+    private val eventOnInteractionListener: EventOnInteractionListener,
 ) : ListAdapter<Event, EventViewHolder>(EventDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         val binding = CardEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return EventViewHolder(binding, eventOnInteractionListener)
+        return EventViewHolder(isItEventFragment, binding, eventOnInteractionListener)
     }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
@@ -35,8 +36,9 @@ class EventAdapter(
 }
 
 class EventViewHolder(
+    private val isItEventFragment: Boolean,
     private val binding: CardEventBinding,
-    private val eventOnInteractionListener: EventOnInteractionListener
+    private val eventOnInteractionListener: EventOnInteractionListener,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(event: Event) {
@@ -126,6 +128,8 @@ class EventViewHolder(
                 }
             }
 
+            hideSpeakersList.isVisible = isItEventFragment && event.speakerIds.isNotEmpty()
+
             photo.isVisible = (event.attachment?.type == AttachmentType.IMAGE) &&
                     (event.attachment.url.isNotBlank())
             videoGroup.isVisible = (event.attachment?.type == AttachmentType.VIDEO) &&
@@ -188,9 +192,12 @@ class EventViewHolder(
                 }.show()
             }
 
-            root.setOnClickListener {
-                eventOnInteractionListener.onOpenEvent(event)
-            }
+//            root.setOnClickListener {
+//                if(!isItEventFragment){
+//                    eventOnInteractionListener.onOpenEvent(event)
+//                }
+//            }
+
         }
     }
 }

@@ -176,10 +176,12 @@ class FeedFragment : Fragment() {
 
         binding.eventsButton.setOnClickListener {
             eventViewModel.isPostsShowed.value = false
+            eventAdapter.refresh()
         }
 
         binding.postsButton.setOnClickListener {
             eventViewModel.isPostsShowed.value = true
+            postAdapter.refresh()
         }
 
         eventViewModel.dataState.observe(viewLifecycleOwner) { state ->

@@ -18,6 +18,7 @@ import ru.netology.nework.api.AppApi
 import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.db.AppDb
 import ru.netology.nework.dto.Event
+import ru.netology.nework.dto.User
 import ru.netology.nework.model.AttachmentModel
 import ru.netology.nework.model.EventsFeedModelState
 import ru.netology.nework.repository.EventRepository
@@ -27,28 +28,28 @@ import ru.netology.nework.types.EventType
 
 private val empty = Event(
     id = 0,
-authorId = 0,
-author = "",
-authorAvatar = null,
-authorJob = null,
-content = "",
-datetime = "",
-published = "",
-coords = null,
-type = EventType.OFFLINE,
-likeOwnerIds = emptyList(),
-likedByMe = false,
-speakerIds = emptyList(),
-participantIds = emptyList(),
-participatedByMe = false,
-attachment = null,
-link = "",
-ownedByMe = false,
-users = emptyMap(),
-likes = 0,
-speakersAvatarUrls = emptyList(),
-taggedMe = false,
-isPlayingAudio = false
+    authorId = 0,
+    author = "",
+    authorAvatar = null,
+    authorJob = null,
+    content = "",
+    datetime = "",
+    published = "",
+    coords = null,
+    type = EventType.OFFLINE,
+    likeOwnerIds = emptyList(),
+    likedByMe = false,
+    speakerIds = emptyList(),
+    participantIds = emptyList(),
+    participatedByMe = false,
+    attachment = null,
+    link = "",
+    ownedByMe = false,
+    users = emptyMap(),
+    likes = 0,
+    speakersAvatarUrls = emptyList(),
+    taggedMe = false,
+    isPlayingAudio = false
 )
 
 class EventViewModel(application: Application) : AndroidViewModel(application) {
@@ -58,12 +59,22 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         AppApi
     )
 
+    private val myId = AppAuth.getInstance().data.value!!.id.toInt()
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val data: Flow<PagingData<Event>> = AppAuth.getInstance().data.flatMapLatest { token ->
         repository.data
-            .map{ events ->
-                events.map{
-                    it.copy(ownedByMe = it.authorId == token?.id?.toInt())
+            .map { events ->
+                events.map {
+                    it.copy(
+                        likedByMe = it.likeOwnerIds.contains(myId),
+                        likes = it.likeOwnerIds.size.toLong(),
+                        ownedByMe = it.authorId == myId,
+                        taggedMe = it.speakerIds.contains(myId),
+                        speakersAvatarUrls = if (it.speakerIds.isNotEmpty())
+                            repository.getUsersAvatarUrls(it.speakerIds)
+                        else emptyList()
+                    )
                 }
             }
     }
@@ -93,6 +104,12 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
 
     val lastEvent: LiveData<Event>
         get() = _lastEvent
+
+    private val _lastEventSpeakers =
+        MutableLiveData(mutableListOf<User>())
+
+    val lastEventSpeakers: LiveData<MutableList<User>>
+        get() = _lastEventSpeakers
 
     //This parameter is shows which list is on(Events or Posts)
     val isPostsShowed = MutableLiveData(true)
@@ -130,7 +147,11 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
             edited.value?.let {
                 when (val attachment = _attachment.value) {
                     null -> repository.save(it.copy(ownedByMe = true))
-                    else -> repository.saveWithAttachment(it.copy(ownedByMe = true), attachment, attachmentType.value!!)
+                    else -> repository.saveWithAttachment(
+                        it.copy(ownedByMe = true),
+                        attachment,
+                        attachmentType.value!!
+                    )
                 }
 
             }
@@ -165,10 +186,33 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     fun getById(id: Long) = viewModelScope.launch {
         _lastId.postValue(id)
         try {
-            _lastEvent.postValue(repository.getById(id))
+            val event = repository.getById(id)
+            _lastEvent.postValue(
+                event.copy(
+                    likedByMe = event.likeOwnerIds.contains(myId),
+                    likes = event.likeOwnerIds.size.toLong(),
+                    ownedByMe = event.authorId == myId,
+                    taggedMe = event.speakerIds.contains(myId),
+                    speakersAvatarUrls = if (event.speakerIds.isNotEmpty())
+                        repository.getUsersAvatarUrls(event.speakerIds)
+                    else emptyList()
+                )
+            )
         } catch (e: Exception) {
             print(e)
         }
+    }
+
+    fun getSpeakersById(id: Int) = viewModelScope.launch {
+        try {
+            _lastEventSpeakers.value?.apply {
+                add(repository.getUserById(id))
+                _lastEventSpeakers.postValue((this))
+            }
+        } catch (e: Exception) {
+            print(e)
+        }
+
     }
 
     fun setAttachment(attachmentModel: AttachmentModel, attachmentType: AttachmentType) {
@@ -180,5 +224,5 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         _attachment.value = null
         _attachmentType.value = null
     }
-    
+
 }

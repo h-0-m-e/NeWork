@@ -57,12 +57,18 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         AppApi
     )
 
+    private val myId = AppAuth.getInstance().data.value!!.id.toInt()
+
     @OptIn(ExperimentalCoroutinesApi::class)
-    val data: Flow<PagingData<Post>> = AppAuth.getInstance().data.flatMapLatest { token ->
+    val data: Flow<PagingData<Post>> = AppAuth.getInstance().data.flatMapLatest {
         repository.data
             .map { posts ->
                 posts.map {
-                    it.copy(ownedByMe = it.authorId == token?.id?.toInt())
+                    it.copy(
+                        likedByMe = it.likeOwnerIds.contains(myId),
+                        likes = it.likeOwnerIds.size.toLong(),
+                        ownedByMe = it.authorId == myId,
+                    )
                 }
             }
     }

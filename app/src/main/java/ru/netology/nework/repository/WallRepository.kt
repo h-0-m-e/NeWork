@@ -57,7 +57,7 @@ class WallRepository(
     }
 
     suspend fun getUser(): User {
-        val response = AppApi.service.userGet(userId.value!!)
+        val response = AppApi.service.userGet(userId.value!!.toString())
         if (!response.isSuccessful) {
             throw RuntimeException(response.message())
         }
