@@ -237,7 +237,7 @@ class CreateFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             if (publicationType == PublicationType.POST) {
                 var postIsReady = true
                 val newPost = Post(
-                    id = (0..1_000_000).random(),
+                    id = 0,
                     authorId = myId,
                     author = myName,
                     authorAvatar = myAvatar,
@@ -282,7 +282,7 @@ class CreateFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             } else {
                 var eventIsReady = true
                 val newEvent = Event(
-                    id = (0..1_000_000).random(),
+                    id = 0,
                     authorId = myId,
                     author = myName,
                     authorAvatar = myAvatar,

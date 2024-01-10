@@ -9,6 +9,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import ru.netology.nework.R
+import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.dto.Event
 import ru.netology.nework.ui.CreateFragment.Companion.textArg
 import ru.netology.nework.viewmodel.EventViewModel
@@ -51,11 +52,15 @@ open class EventOnInteractionListener(
             })
     }
 
-    open fun onOpenUserWall(id: String){
-        findNavController(view).navigate(R.id.wallFragment,
-            Bundle().apply {
-                textArg = id
-            })
+    open fun onOpenUserWall(id: Int){
+        if (id == AppAuth.getInstance().data.value!!.id.toInt()){
+            findNavController(view).navigate(R.id.myWallFragment)
+        } else {
+            findNavController(view).navigate(R.id.wallFragment,
+                Bundle().apply {
+                    textArg = id.toString()
+                })
+        }
     }
 
     open fun onPlayAudio(event: Event){
@@ -64,7 +69,6 @@ open class EventOnInteractionListener(
 
     open fun onRemove(event: Event) {
         viewModel.removeById(event.id.toLong())
-        findNavController(view).navigate(R.id.feedFragment)
     }
 
     open fun onEdit(event: Event) {

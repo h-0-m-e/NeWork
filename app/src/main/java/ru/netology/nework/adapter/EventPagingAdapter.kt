@@ -7,7 +7,6 @@ import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nework.R
 import ru.netology.nework.databinding.CardEventBinding
@@ -19,22 +18,22 @@ import ru.netology.nework.types.AttachmentType
 import ru.netology.nework.types.EventType
 import ru.netology.nework.utils.CounterUtil
 
-class EventAdapter(
+class EventPagingAdapter(
     private val eventOnInteractionListener: EventOnInteractionListener
-) : ListAdapter<Event, EventViewHolder>(EventDiffCallback()) {
+) : PagingDataAdapter<Event, EventPagingViewHolder>(EventPagingDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventPagingViewHolder {
         val binding = CardEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return EventViewHolder(binding, eventOnInteractionListener)
+        return EventPagingViewHolder(binding, eventOnInteractionListener)
     }
 
-    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        val event = getItem(position)
+    override fun onBindViewHolder(holder: EventPagingViewHolder, position: Int) {
+        val event = getItem(position) ?: return
         holder.bind(event)
     }
 }
 
-class EventViewHolder(
+class EventPagingViewHolder(
     private val binding: CardEventBinding,
     private val eventOnInteractionListener: EventOnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -196,7 +195,7 @@ class EventViewHolder(
 }
 
 
-class EventDiffCallback : DiffUtil.ItemCallback<Event>() {
+class EventPagingDiffCallback : DiffUtil.ItemCallback<Event>() {
     override fun areItemsTheSame(oldItem: Event, newItem: Event): Boolean {
         return oldItem.id == newItem.id
     }

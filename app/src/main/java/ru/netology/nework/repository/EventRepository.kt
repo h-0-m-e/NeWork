@@ -1,25 +1,22 @@
 package ru.netology.nework.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import ru.netology.nework.api.AppApi
-import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.dao.AppDao
 import ru.netology.nework.dto.Attachment
 import ru.netology.nework.dto.Event
 import ru.netology.nework.dto.MediaResponse
 import ru.netology.nework.dto.Post
 import ru.netology.nework.entity.EventEntity
-import ru.netology.nework.entity.PostEntity
-import ru.netology.nework.entity.UserEntity
 import ru.netology.nework.entity.toEntity
 import ru.netology.nework.error.ApiError
 import ru.netology.nework.error.AppError
@@ -28,16 +25,26 @@ import ru.netology.nework.model.AttachmentModel
 import ru.netology.nework.types.AttachmentType
 import java.io.IOException
 
-class EventRepository(private val appDao: AppDao, private val  myId: Int) {
-    val data: Flow<List<Event>> =
-        appDao.eventGetAll().map { it.map(EventEntity::toDto) }
+class EventRepository(
+    private val appDao: AppDao,
+    private val  myId: Int,
+    private val api: AppApi
+    ) {
+//    val data: Flow<List<Event>> =
+//        appDao.eventGetAll().map { it.map(EventEntity::toDto) }
 
-
-
+    val data = Pager(
+        config = PagingConfig(pageSize = 10, enablePlaceholders = false),
+        pagingSourceFactory = {
+            EventPagingSource(
+                api
+            )
+        }
+    ).flow
 
     fun getNewer(id: Long): Flow<Int> = flow {
         while (true) {
-            val response = AppApi.service.eventGetNewer(id)
+            val response = api.service.eventGetNewer(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -51,7 +58,7 @@ class EventRepository(private val appDao: AppDao, private val  myId: Int) {
         .flowOn(Dispatchers.Default)
 
     suspend fun getAll() {
-        val response = AppApi.service.eventGetAll()
+        val response = api.service.eventGetAll()
         if (!response.isSuccessful) {
             throw RuntimeException(response.message())
         }
@@ -74,7 +81,7 @@ class EventRepository(private val appDao: AppDao, private val  myId: Int) {
     private suspend fun getUsersAvatarUrls(userIds: List<Int>): List<String> {
         val userAvatarUrls = mutableListOf<String>()
         for (user in userIds){
-            val response = AppApi.service.userGet(user.toLong())
+            val response = api.service.userGet(user.toLong())
             if (!response.isSuccessful) {
                 throw RuntimeException(response.message())
             }
@@ -86,13 +93,16 @@ class EventRepository(private val appDao: AppDao, private val  myId: Int) {
 
     suspend fun likeById(id: Long) {
         try {
-            val liked = appDao.eventGetById(id).likedByMe
+            val liked = api.service.eventGetById(id.toString()).body()?.likedByMe
             val response =
-                if (liked) AppApi.service.eventUnlikeById(id)
-                else AppApi.service.eventLikeById(id)
+                if (liked!!) api.service.eventUnlikeById(id)
+                else api.service.eventLikeById(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
+            val body = response.body() ?: throw ApiError(response.code(), response.message())
+
+            appDao.eventInsert(EventEntity.fromDto(body))
         } catch (e: ApiError) {
             throw e
         } catch (e: IOException) {
@@ -104,7 +114,7 @@ class EventRepository(private val appDao: AppDao, private val  myId: Int) {
 
     suspend fun save(event: Event) {
         try {
-            val response = AppApi.service.eventSave(event)
+            val response = api.service.eventSave(event)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -126,7 +136,7 @@ class EventRepository(private val appDao: AppDao, private val  myId: Int) {
                     type = type
                 )
             )
-            val response = AppApi.service.eventSave(events)
+            val response = api.service.eventSave(events)
 
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
@@ -158,7 +168,7 @@ class EventRepository(private val appDao: AppDao, private val  myId: Int) {
 //                model.file.inputStream().readBytes().toRequestBody("*/*".toMediaTypeOrNull())
 //            val filePart = MultipartBody.Part.createFormData("file","file_name", fileRequestBody)
 
-            val response = AppApi.service.uploadMedia(media)
+            val response = api.service.uploadMedia(media)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -172,7 +182,7 @@ class EventRepository(private val appDao: AppDao, private val  myId: Int) {
     suspend fun removeById(id: Long) {
         try {
 
-            val response = AppApi.service.eventRemoveById(id)
+            val response = api.service.eventRemoveById(id)
             if (!response.isSuccessful) {
                 throw RuntimeException(response.message())
             }
@@ -181,6 +191,18 @@ class EventRepository(private val appDao: AppDao, private val  myId: Int) {
             throw NetworkError
         } catch (e: Exception) {
             throw ru.netology.nework.error.UnknownError
+        }
+    }
+
+    suspend fun getById(id: Long): Event {
+        try {
+            val response = api.service.eventGetById(id.toString())
+            if (!response.isSuccessful) {
+                throw RuntimeException(response.message())
+            }
+            return response.body() ?: throw ApiError(response.code(), response.message())
+        } catch (e: IOException) {
+            throw NetworkError
         }
     }
 

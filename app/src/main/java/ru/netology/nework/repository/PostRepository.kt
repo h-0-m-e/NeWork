@@ -1,5 +1,7 @@
 package ru.netology.nework.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -16,6 +18,7 @@ import ru.netology.nework.dao.AppDao
 import ru.netology.nework.dto.Attachment
 import ru.netology.nework.dto.MediaResponse
 import ru.netology.nework.dto.Post
+import ru.netology.nework.entity.EventEntity
 import ru.netology.nework.entity.PostEntity
 import ru.netology.nework.entity.toEntity
 import ru.netology.nework.error.ApiError
@@ -25,14 +28,27 @@ import ru.netology.nework.model.AttachmentModel
 import ru.netology.nework.types.AttachmentType
 import java.io.IOException
 
-class PostRepository(private val appDao: AppDao, private val myId: Int) {
-    val data: Flow<List<Post>> =
-        appDao.postGetAll().map { it.map(PostEntity::toDto) }
+class PostRepository(
+    private val appDao: AppDao,
+    private val myId: Int,
+    private val api: AppApi
+) {
+//    val data: Flow<List<Post>> =
+//        appDao.postGetAll().map { it.map(PostEntity::toDto) }
+
+    val data = Pager(
+        config = PagingConfig(pageSize = 10, enablePlaceholders = false),
+        pagingSourceFactory = {
+            PostPagingSource(
+                api
+            )
+        }
+    ).flow
 
 
     fun getNewer(id: Long): Flow<Int> = flow {
         while (true) {
-            val response = AppApi.service.postGetNewer(id)
+            val response = api.service.postGetNewer(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -46,7 +62,7 @@ class PostRepository(private val appDao: AppDao, private val myId: Int) {
         .flowOn(Dispatchers.Default)
 
     suspend fun getAll() {
-        val response = AppApi.service.postGetAll()
+        val response = api.service.postGetAll()
         if (!response.isSuccessful) {
             throw RuntimeException(response.message())
 
@@ -66,7 +82,7 @@ class PostRepository(private val appDao: AppDao, private val myId: Int) {
     }
 
     suspend fun getAllVisible() {
-        val response = AppApi.service.postGetAll()
+        val response = api.service.postGetAll()
         if (!response.isSuccessful) {
             throw RuntimeException(response.message())
         }
@@ -76,13 +92,16 @@ class PostRepository(private val appDao: AppDao, private val myId: Int) {
 
     suspend fun likeById(id: Long) {
         try {
-            val liked = appDao.postGetById(id).likedByMe
+            val liked = api.service.postGetById(id.toString()).body()?.likedByMe
             val response =
-                if (liked) AppApi.service.postUnlikeById(id)
-                else AppApi.service.postLikeById(id)
+                if (liked!!) api.service.postUnlikeById(id)
+                else api.service.postLikeById(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
+            val body = response.body() ?: throw ApiError(response.code(), response.message())
+
+            appDao.postInsert(PostEntity.fromDto(body))
         } catch (e: ApiError) {
             throw e
         } catch (e: IOException) {
@@ -94,7 +113,7 @@ class PostRepository(private val appDao: AppDao, private val myId: Int) {
 
     suspend fun save(post: Post) {
         try {
-            val response = AppApi.service.postSave(post)
+            val response = api.service.postSave(post)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -116,7 +135,7 @@ class PostRepository(private val appDao: AppDao, private val myId: Int) {
                     type = type
                 )
             )
-            val response = AppApi.service.postSave(posts)
+            val response = api.service.postSave(posts)
 
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
@@ -148,7 +167,7 @@ class PostRepository(private val appDao: AppDao, private val myId: Int) {
 //                model.uri.path!!.toRequestBody("*/*".toMediaTypeOrNull())
 //            val filePart = MultipartBody.Part.createFormData("file","file_name", fileRequestBody)
 
-            val response = AppApi.service.uploadMedia(media)
+            val response = api.service.uploadMedia(media)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
@@ -161,7 +180,7 @@ class PostRepository(private val appDao: AppDao, private val myId: Int) {
 
     suspend fun removeById(id: Long) {
         try {
-            val response = AppApi.service.postRemoveById(id)
+            val response = api.service.postRemoveById(id)
             if (!response.isSuccessful) {
                 throw RuntimeException(response.message())
             }
@@ -170,6 +189,18 @@ class PostRepository(private val appDao: AppDao, private val myId: Int) {
             throw NetworkError
         } catch (e: Exception) {
             throw ru.netology.nework.error.UnknownError
+        }
+    }
+
+    suspend fun getById(id: Long): Post {
+        try {
+            val response = api.service.postGetById(id.toString())
+            if (!response.isSuccessful) {
+                throw RuntimeException(response.message())
+            }
+            return response.body() ?: throw ApiError(response.code(), response.message())
+        } catch (e: IOException) {
+            throw NetworkError
         }
     }
 

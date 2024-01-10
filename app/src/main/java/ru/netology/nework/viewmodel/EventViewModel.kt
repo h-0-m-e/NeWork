@@ -4,21 +4,21 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.map
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.netology.nework.api.AppApi
 import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.db.AppDb
-import ru.netology.nework.dto.Attachment
-import ru.netology.nework.dto.Coordinates
 import ru.netology.nework.dto.Event
-import ru.netology.nework.dto.UserPreview
 import ru.netology.nework.model.AttachmentModel
-import ru.netology.nework.model.EventsFeedModel
 import ru.netology.nework.model.EventsFeedModelState
 import ru.netology.nework.repository.EventRepository
 import ru.netology.nework.types.AttachmentType
@@ -54,20 +54,20 @@ isPlayingAudio = false
 class EventViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = EventRepository(
         AppDb.getInstance(application).appDao(),
-        AppAuth.getInstance().data.value?.id?.toInt() ?: 0
+        AppAuth.getInstance().data.value?.id?.toInt() ?: 0,
+        AppApi
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val data: LiveData<EventsFeedModel> = AppAuth.getInstance().data.flatMapLatest { token ->
+    val data: Flow<PagingData<Event>> = AppAuth.getInstance().data.flatMapLatest { token ->
         repository.data
             .map{ events ->
                 events.map{
                     it.copy(ownedByMe = it.authorId == token?.id?.toInt())
                 }
             }
-            .map { EventsFeedModel(it) }
     }
-        .asLiveData(Dispatchers.Default)
+        .flowOn(Dispatchers.Default)
 
 
     private val _dataState = MutableLiveData<EventsFeedModelState>()
@@ -97,29 +97,29 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     //This parameter is shows which list is on(Events or Posts)
     val isPostsShowed = MutableLiveData(true)
 
-    init {
-        loadEvents()
-    }
-
-    fun loadEvents() = viewModelScope.launch {
-        _dataState.value = EventsFeedModelState(loading = true)
-        try {
-            repository.getAll()
-            _dataState.value = EventsFeedModelState()
-        } catch (e: Exception) {
-            _dataState.value = EventsFeedModelState(error = ErrorType.LOADING, errorMessage = e.message)
-        }
-    }
-
-    fun refresh() = viewModelScope.launch {
-        _dataState.value = EventsFeedModelState(refreshing = true)
-        try {
-            repository.getAll()
-            _dataState.value = EventsFeedModelState()
-        } catch (e: Exception) {
-            _dataState.value = EventsFeedModelState(error = ErrorType.LOADING)
-        }
-    }
+//    init {
+//        loadEvents()
+//    }
+//
+//    fun loadEvents() = viewModelScope.launch {
+//        _dataState.value = EventsFeedModelState(loading = true)
+//        try {
+//            repository.getAll()
+//            _dataState.value = EventsFeedModelState()
+//        } catch (e: Exception) {
+//            _dataState.value = EventsFeedModelState(error = ErrorType.LOADING, errorMessage = e.message)
+//        }
+//    }
+//
+//    fun refresh() = viewModelScope.launch {
+//        _dataState.value = EventsFeedModelState(refreshing = true)
+//        try {
+//            repository.getAll()
+//            _dataState.value = EventsFeedModelState()
+//        } catch (e: Exception) {
+//            _dataState.value = EventsFeedModelState(error = ErrorType.LOADING)
+//        }
+//    }
 
     fun removeEdit() {
         edited.value = empty
@@ -147,7 +147,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     fun likeById(event: Event) = viewModelScope.launch {
         _lastEvent.postValue(event)
         try {
-            repository.likeById(lastEvent.value!!.id.toLong())
+            repository.likeById(event.id.toLong())
         } catch (e: Exception) {
             print(e)
         }
@@ -157,6 +157,15 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         _lastId.postValue(id)
         try {
             repository.removeById(_lastId.value!!)
+        } catch (e: Exception) {
+            print(e)
+        }
+    }
+
+    fun getById(id: Long) = viewModelScope.launch {
+        _lastId.postValue(id)
+        try {
+            _lastEvent.postValue(repository.getById(id))
         } catch (e: Exception) {
             print(e)
         }

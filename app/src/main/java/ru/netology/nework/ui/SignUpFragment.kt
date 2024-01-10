@@ -33,14 +33,6 @@ class SignUpFragment: Fragment() {
         ownerProducer = ::requireParentFragment
     )
 
-    private val postViewModel: PostViewModel by viewModels(
-        ownerProducer = ::requireParentFragment
-    )
-
-    private val eventViewModel: EventViewModel by viewModels(
-        ownerProducer = ::requireParentFragment
-    )
-
     @SuppressLint("MissingPermission")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,8 +51,6 @@ class SignUpFragment: Fragment() {
             binding.loading.isVisible = state.loading
             binding.signUpButton.isVisible = !state.loading
             if (state.success && state.signedUp){
-                postViewModel.loadPosts()
-                eventViewModel.loadEvents()
                 signViewModel.clean()
                 findNavController().navigate( R.id.action_signUpFragment_to_feedFragment)
             }

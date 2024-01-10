@@ -6,11 +6,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.map
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.netology.nework.api.AppApi
 import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.db.AppDb
 import ru.netology.nework.dto.Attachment
@@ -48,20 +53,20 @@ private val empty = Post(
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = PostRepository(
         AppDb.getInstance(application).appDao(),
-        AppAuth.getInstance().data.value?.id?.toInt() ?: 0
+        AppAuth.getInstance().data.value?.id?.toInt() ?: 0,
+        AppApi
     )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val data: LiveData<PostsFeedModel> = AppAuth.getInstance().data.flatMapLatest { token ->
+    val data: Flow<PagingData<Post>> = AppAuth.getInstance().data.flatMapLatest { token ->
         repository.data
             .map { posts ->
                 posts.map {
                     it.copy(ownedByMe = it.authorId == token?.id?.toInt())
                 }
             }
-            .map { PostsFeedModel(it) }
     }
-        .asLiveData(Dispatchers.Default)
+        .flowOn(Dispatchers.Default)
 
 
     private val _dataState = MutableLiveData<PostsFeedModelState>()
@@ -88,29 +93,29 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val lastPost: LiveData<Post>
         get() = _lastPost
 
-    init {
-        loadPosts()
-    }
+//    init {
+//        loadPosts()
+//    }
 
-    fun loadPosts() = viewModelScope.launch {
-        _dataState.value = PostsFeedModelState(loading = true)
-        try {
-            repository.getAll()
-            _dataState.value = PostsFeedModelState()
-        } catch (e: Exception) {
-            _dataState.value = PostsFeedModelState(error = ErrorType.LOADING)
-        }
-    }
+//    fun loadPosts() = viewModelScope.launch {
+//        _dataState.value = PostsFeedModelState(loading = true)
+//        try {
+//            repository.getAll()
+//            _dataState.value = PostsFeedModelState()
+//        } catch (e: Exception) {
+//            _dataState.value = PostsFeedModelState(error = ErrorType.LOADING)
+//        }
+//    }
 
-    fun refresh() = viewModelScope.launch {
-        _dataState.value = PostsFeedModelState(refreshing = true)
-        try {
-            repository.getAll()
-            _dataState.value = PostsFeedModelState()
-        } catch (e: Exception) {
-            _dataState.value = PostsFeedModelState(error = ErrorType.LOADING)
-        }
-    }
+//    fun refresh() = viewModelScope.launch {
+//        _dataState.value = PostsFeedModelState(refreshing = true)
+//        try {
+//            repository.getAll()
+//            _dataState.value = PostsFeedModelState()
+//        } catch (e: Exception) {
+//            _dataState.value = PostsFeedModelState(error = ErrorType.LOADING)
+//        }
+//    }
 
     fun removeEdit() {
         edited.value = empty
@@ -152,6 +157,15 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         _lastId.postValue(id)
         try {
             repository.removeById(_lastId.value!!)
+        } catch (e: Exception) {
+            print(e)
+        }
+    }
+
+    fun getById(id: Long) = viewModelScope.launch {
+        _lastId.postValue(id)
+        try {
+            _lastPost.postValue(repository.getById(id))
         } catch (e: Exception) {
             print(e)
         }

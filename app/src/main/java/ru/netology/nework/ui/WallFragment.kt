@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.netology.nework.R
 import ru.netology.nework.adapter.PostAdapter
+import ru.netology.nework.adapter.PostPagingAdapter
 import ru.netology.nework.databinding.WallFragmentBinding
 import ru.netology.nework.extentions.loadWallAvatar
 import ru.netology.nework.listener.PostOnInteractionListener

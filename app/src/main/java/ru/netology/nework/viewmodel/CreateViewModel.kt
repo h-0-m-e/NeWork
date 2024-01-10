@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.netology.nework.api.AppApi
 import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.db.AppDb
 import ru.netology.nework.dto.Attachment
@@ -37,11 +38,11 @@ class CreateViewModel (application: Application) : AndroidViewModel(application)
     )
 
     private val postRepository = PostRepository(
-        AppDb.getInstance(application).appDao(), myId
+        AppDb.getInstance(application).appDao(), myId, AppApi
     )
 
     private val eventRepository = EventRepository(
-        AppDb.getInstance(application).appDao(), myId
+        AppDb.getInstance(application).appDao(), myId, AppApi
     )
 
     fun loadUser() = viewModelScope.launch {

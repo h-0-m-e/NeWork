@@ -14,6 +14,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 import ru.netology.nework.BuildConfig
 import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.dto.Event
@@ -59,8 +60,44 @@ interface AppApiService {
     @GET("posts/")
     suspend fun postGetAll(): Response<List<Post>>
 
+    @GET("posts/{post_id}/")
+    suspend fun postGetById(@Path("post_id") id: String): Response<Post>
+
+    @GET("posts/latest/")
+    suspend fun postGetLatest(@Query("count") count: Int): Response<List<Post>>
+
+    @GET("posts/{id}/before/")
+    suspend fun postGetBefore(
+        @Path("id") id: Long,
+        @Query("count") count: Int,
+    ): Response<List<Post>>
+
+    @GET("posts/{id}/after/")
+    suspend fun postGetAfter(
+        @Path("id") id: Long,
+        @Query("count") count: Int,
+    ): Response<List<Post>>
+
     @GET("events/")
     suspend fun eventGetAll(): Response<List<Event>>
+
+    @GET("events/{event_id}/")
+    suspend fun eventGetById(@Path("event_id") id: String): Response<Event>
+
+    @GET("events/latest/")
+    suspend fun eventGetLatest(@Query("count") count: Int): Response<List<Event>>
+
+    @GET("events/{id}/before")
+    suspend fun eventGetBefore(
+        @Path("id") id: Long,
+        @Query("count") count: Int,
+    ): Response<List<Event>>
+
+    @GET("events/{id}/after")
+    suspend fun eventGetAfter(
+        @Path("id") id: Long,
+        @Query("count") count: Int,
+    ): Response<List<Event>>
 
     @GET("users/{id}/")
     suspend fun userGet(@Path("id") id: Long): Response<User>

@@ -8,26 +8,38 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import ru.netology.nework.R
-import ru.netology.nework.adapter.EventAdapter
-import ru.netology.nework.adapter.PostAdapter
+import ru.netology.nework.adapter.EventPagingAdapter
+import ru.netology.nework.adapter.PostPagingAdapter
 import ru.netology.nework.databinding.FeedFragmentBinding
 import ru.netology.nework.listener.EventOnInteractionListener
 import ru.netology.nework.listener.PostOnInteractionListener
 import ru.netology.nework.types.ErrorType
+import ru.netology.nework.utils.StringArg
 import ru.netology.nework.viewmodel.EventViewModel
 import ru.netology.nework.viewmodel.PostViewModel
+import ru.netology.nework.viewmodel.SignInUpViewModel
 
-class FeedFragment: Fragment() {
+class FeedFragment : Fragment() {
 
     private val postViewModel: PostViewModel by viewModels(
         ownerProducer = ::requireParentFragment
     )
 
     private val eventViewModel: EventViewModel by viewModels(
+        ownerProducer = ::requireParentFragment
+    )
+
+    private val signViewModel: SignInUpViewModel by viewModels(
         ownerProducer = ::requireParentFragment
     )
 
@@ -42,8 +54,8 @@ class FeedFragment: Fragment() {
             false
         )
 
-        eventViewModel.isPostsShowed.observe(viewLifecycleOwner){
-            if(it){
+        eventViewModel.isPostsShowed.observe(viewLifecycleOwner) {
+            if (it) {
                 binding.postsButton.setBackgroundColor(
                     ContextCompat.getColor(
                         this.requireContext(),
@@ -92,8 +104,8 @@ class FeedFragment: Fragment() {
         val swipeRefreshEvent = binding.swipeRefreshEvent
         val swipeRefreshPost = binding.swipeRefreshPost
 
-        val eventAdapter = EventAdapter(eventInteractionListener)
-        val postAdapter = PostAdapter(postInteractionListener)
+        val eventAdapter = EventPagingAdapter(eventInteractionListener)
+        val postAdapter = PostPagingAdapter(postInteractionListener)
 
 
         binding.listEvent.adapter = eventAdapter
@@ -103,10 +115,28 @@ class FeedFragment: Fragment() {
                 LinearLayoutManager.VERTICAL
             )
         )
-        eventViewModel.data.observe(viewLifecycleOwner) { data ->
-            eventAdapter.submitList(data.events)
-            binding.emptyEvents.isVisible = data.empty && binding.eventsParent.isVisible
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                eventViewModel.data.collectLatest {
+                    eventAdapter.submitData(it)
+                }
+            }
         }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                eventAdapter.loadStateFlow.collectLatest {
+                    binding.eventProgressBar.isVisible =
+                    it.refresh is LoadState.Loading
+                            || it.prepend is LoadState.Loading
+                            || it.append is LoadState.Loading
+                }
+            }
+        }
+//        eventViewModel.data.observe(viewLifecycleOwner) { data ->
+//            eventAdapter.submitList(data.events)
+//            binding.emptyEvents.isVisible = data.empty && binding.eventsParent.isVisible
+//        }
 
         binding.listPost.adapter = postAdapter
         binding.listPost.addItemDecoration(
@@ -115,11 +145,34 @@ class FeedFragment: Fragment() {
                 LinearLayoutManager.VERTICAL
             )
         )
-        postViewModel.data.observe(viewLifecycleOwner) { data ->
-            postAdapter.submitList(data.posts)
-            binding.emptyPosts.isVisible = data.empty && binding.postsParent.isVisible
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED){
+                postViewModel.data.collectLatest {
+                    postAdapter.submitData(it)
+                }
+            }
         }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                postAdapter.loadStateFlow.collectLatest {
+                    binding.postProgressBar.isVisible =
+                        it.refresh is LoadState.Loading
+                            || it.prepend is LoadState.Loading
+                            || it.append is LoadState.Loading
+                }
+            }
+        }
+//        postViewModel.data.observe(viewLifecycleOwner) { data ->
+//            postAdapter.submitList(data.posts)
+//            binding.emptyPosts.isVisible = data.empty && binding.postsParent.isVisible
+//        }
 
+        signViewModel.dataState.observe(viewLifecycleOwner){
+            if (it.success){
+                postAdapter.refresh()
+                eventAdapter.refresh()
+            }
+        }
 
         binding.eventsButton.setOnClickListener {
             eventViewModel.isPostsShowed.value = false
@@ -130,20 +183,20 @@ class FeedFragment: Fragment() {
         }
 
         eventViewModel.dataState.observe(viewLifecycleOwner) { state ->
-            binding.swipeRefreshEvent.isRefreshing = state.refreshing
             when (state.error) {
                 ErrorType.LOADING ->
-                    if(binding.eventsParent.isVisible){
+                    if (binding.eventsParent.isVisible) {
                         binding.emptyEvents.visibility = View.VISIBLE
                         binding.emptyEvents.text = state.errorMessage
                         Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.retry) { eventViewModel.loadEvents() }
+                            .setAction(R.string.retry) { eventAdapter.refresh() }
                             .show()
                     }
+
                 ErrorType.SAVE ->
-                        Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.retry) { eventViewModel.save() }
-                            .show()
+                    Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.retry) { eventViewModel.save() }
+                        .show()
 
                 else -> Unit
 
@@ -151,32 +204,41 @@ class FeedFragment: Fragment() {
         }
 
         postViewModel.dataState.observe(viewLifecycleOwner) { state ->
-            binding.swipeRefreshPost.isRefreshing = state.refreshing
             when (state.error) {
                 ErrorType.LOADING ->
-                    if(binding.postsParent.isVisible) {
+                    if (binding.postsParent.isVisible) {
                         Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.retry) { postViewModel.loadPosts() }
+                            .setAction(R.string.retry) { postAdapter.refresh() }
                             .show()
                     }
+
                 ErrorType.SAVE ->
                     Snackbar.make(binding.root, R.string.error, Snackbar.LENGTH_LONG)
                         .setAction(R.string.retry) { postViewModel.save() }
                         .show()
+
                 else -> Unit
 
             }
         }
 
         swipeRefreshEvent.setOnRefreshListener {
-            eventViewModel.refresh()
+            eventAdapter.refresh()
+            binding.swipeRefreshEvent.isRefreshing = false
+            binding.listEvent.smoothScrollToPosition(0)
         }
 
         swipeRefreshPost.setOnRefreshListener {
-            postViewModel.refresh()
+            postAdapter.refresh()
+            binding.swipeRefreshPost.isRefreshing = false
+            binding.listPost.smoothScrollToPosition(0)
         }
 
 
         return binding.root
+    }
+
+    companion object {
+        var Bundle.textArg: String? by StringArg
     }
 }

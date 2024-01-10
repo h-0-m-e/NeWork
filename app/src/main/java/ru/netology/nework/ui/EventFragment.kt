@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import ru.netology.nework.adapter.EventPagingViewHolder
 import ru.netology.nework.adapter.EventViewHolder
+import ru.netology.nework.adapter.PostViewHolder
 import ru.netology.nework.databinding.EventFragmentBinding
 import ru.netology.nework.listener.EventOnInteractionListener
-import ru.netology.nework.ui.CreateFragment.Companion.textArg
 import ru.netology.nework.utils.StringArg
 import ru.netology.nework.viewmodel.EventViewModel
 
@@ -39,10 +40,10 @@ class EventFragment : Fragment() {
         )
 
         binding.publication.apply {
-            eventViewModel.data.observe(viewLifecycleOwner) { it ->
+            eventViewModel.getById(currentEventId ?: 0)
+            eventViewModel.lastEvent.observe(viewLifecycleOwner){ it ->
                 val viewHolder = EventViewHolder(binding.publication, eventInteractionListener)
-                val event = it.events.find { it.id.toLong() == currentEventId }
-                event?.let { viewHolder.bind(event) }
+                it?.let { viewHolder.bind(it) }
             }
         }
 

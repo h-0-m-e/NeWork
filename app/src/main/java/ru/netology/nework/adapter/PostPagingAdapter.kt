@@ -6,7 +6,6 @@ import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nework.R
 import ru.netology.nework.databinding.CardPostBinding
@@ -17,22 +16,22 @@ import ru.netology.nework.listener.PostOnInteractionListener
 import ru.netology.nework.types.AttachmentType
 import ru.netology.nework.utils.CounterUtil
 
-class PostAdapter(
+class PostPagingAdapter(
     private val postOnInteractionListener: PostOnInteractionListener
-) : ListAdapter<Post, PostViewHolder>(PostDiffCallback()) {
+) : PagingDataAdapter<Post, PostPagingViewHolder>(PostPagingDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostPagingViewHolder {
         val binding = CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PostViewHolder(binding, postOnInteractionListener)
+        return PostPagingViewHolder(binding, postOnInteractionListener)
     }
 
-    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        val post = getItem(position)
+    override fun onBindViewHolder(holder: PostPagingViewHolder, position: Int) {
+        val post = getItem(position) ?: return
         holder.bind(post)
     }
 }
 
-class PostViewHolder(
+class PostPagingViewHolder(
     private val binding: CardPostBinding,
     private val postOnInteractionListener: PostOnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -121,7 +120,7 @@ class PostViewHolder(
     }
 }
 
-class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
+class PostPagingDiffCallback : DiffUtil.ItemCallback<Post>() {
     override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
         return oldItem.id == newItem.id
     }
@@ -130,4 +129,3 @@ class PostDiffCallback : DiffUtil.ItemCallback<Post>() {
         return oldItem == newItem
     }
 }
-

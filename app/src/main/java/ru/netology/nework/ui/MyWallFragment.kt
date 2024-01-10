@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.netology.nework.R
 import ru.netology.nework.adapter.PostAdapter
+import ru.netology.nework.adapter.PostPagingAdapter
 import ru.netology.nework.databinding.MyWallFragmentBinding
 import ru.netology.nework.extentions.loadWallAvatar
 import ru.netology.nework.listener.PostOnInteractionListener
@@ -98,7 +99,11 @@ class MyWallFragment: Fragment() {
 
         val postAdapter = PostAdapter(postInteractionListener)
 
-
+        binding.list.adapter = postAdapter
+        myWallViewModel.data.observe(viewLifecycleOwner) { data ->
+            postAdapter.submitList(data.posts)
+            binding.empty.isVisible = data.empty
+        }
         binding.list.addItemDecoration(
             DividerItemDecoration(
                 context,

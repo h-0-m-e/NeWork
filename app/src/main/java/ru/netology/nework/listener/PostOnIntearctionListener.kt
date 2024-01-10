@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.Navigation.findNavController
 import ru.netology.nework.R
+import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.dto.Post
 import ru.netology.nework.ui.CreateFragment.Companion.textArg
 import ru.netology.nework.viewmodel.PostViewModel
@@ -49,11 +50,15 @@ open class PostOnInteractionListener(
             })
     }
 
-    open fun onOpenUserWall(id: String){
-        findNavController(view).navigate(R.id.wallFragment,
-            Bundle().apply {
-                textArg = id
-            })
+    open fun onOpenUserWall(id: Int){
+        if (id == AppAuth.getInstance().data.value!!.id.toInt()){
+            findNavController(view).navigate(R.id.myWallFragment)
+        } else {
+            findNavController(view).navigate(R.id.wallFragment,
+                Bundle().apply {
+                    textArg = id.toString()
+                })
+        }
     }
 
     open fun onPlayAudio(post: Post){
@@ -62,7 +67,6 @@ open class PostOnInteractionListener(
 
     open fun onRemove(post: Post) {
         viewModel.removeById(post.id.toLong())
-        findNavController(view).navigate(R.id.feedFragment)
     }
 
     open fun onEdit(post: Post) {
