@@ -93,6 +93,11 @@ class EventFragment : Fragment() {
         return binding.root
     }
 
+    override fun onPause() {
+        super.onPause()
+        eventViewModel.clearLastEvent()
+    }
+
     companion object {
         var Bundle.textArg: String? by StringArg
     }

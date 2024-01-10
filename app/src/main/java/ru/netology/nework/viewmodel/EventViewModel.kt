@@ -215,6 +215,12 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
+    fun clearLastEvent(){
+        _lastEventSpeakers.value?.clear()
+        _lastEvent.value = empty
+        _lastId.value = 0
+    }
+
     fun setAttachment(attachmentModel: AttachmentModel, attachmentType: AttachmentType) {
         _attachment.value = attachmentModel
         _attachmentType.value = attachmentType
